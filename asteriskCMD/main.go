@@ -16,8 +16,7 @@ func AsteriskCMD(command string) (string, error) {
 	stdout, err := cmd.Output()
 
 	if err != nil {
-		fmt.Println(err.Error())
-		return "", fmt.Errorf("Asterisk CMD: %s | error: %v", command, err)
+		return "", fmt.Errorf(err.Error())
 	}
 
 	return string(stdout), nil
