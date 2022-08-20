@@ -1,5 +1,11 @@
 # Asterisk Server Remote CLI
 
+# Docker
+![AsteriskServerRemoteCLI](file:///home/lordbasex/Descargas/AsteriskServerRemoteCLI.png)
+
+* RabbitMQ server required
+* Asterisk Server - IssabelPBX, FreePBX or VitalPBX
+
 
 ## RABBITMQ SERVER - Docker-Compose
 
@@ -52,4 +58,34 @@ go build -o asterisk-server-remote-cli main.go
 ## systemctl - Debian and Ubuntu
 ```
 yes|cp -fra asterisk-server-remote-cli /usr/local/bin/
+```
+
+```
+cat > /etc/systemd/system/asterisk-server-remote-cli.service <<ENDLINE
+[Unit]
+Description=AsteriskServerRemoteCLI
+Documentation=https://www.iperfex.com
+Wants=network.target
+After=network.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+ExecStart=/usr/local/bin/asterisk-server-remote-cli
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+ENDLINE
+```
+
+```
+systemctl enable asterisk-server-remote-cli
+systemctl start asterisk-server-remote-cli
+systemctl status asterisk-server-remote-cli
+```
+
+```
+systemctl stop asterisk-server-remote-cli
 ```
