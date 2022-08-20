@@ -1,4 +1,4 @@
-# AsteriskServerRemoteCLI
+# Asterisk Server Remote CLI
 
 
 ## RABBITMQ SERVER - Docker-Compose
