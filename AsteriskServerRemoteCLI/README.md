@@ -35,3 +35,21 @@ networks:
     name: rabbitmq_network
     driver: bridge
 ```
+
+## RUN DEV AsteriskServerRemoteCLI
+```
+go mod init AsteriskServerRemoteCLI
+go mod tidy
+go run main.go
+```
+
+## BUILD SERVER AsteriskServerRemoteCLI
+```
+go build -o asterisk-server-remote-cli main.go
+
+```
+
+## systemctl - Debian and Ubuntu
+```
+yes|cp -fra asterisk-server-remote-cli /usr/local/bin/
+```
