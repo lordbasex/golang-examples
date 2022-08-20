@@ -3,7 +3,7 @@
 
 ## RABBITMQ SERVER
 
-```
+```docker-compose.yml
 version: "3.7"
 services:
   rabbitmq:
