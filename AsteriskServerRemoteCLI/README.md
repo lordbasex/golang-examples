@@ -1,7 +1,7 @@
 # AsteriskServerRemoteCLI
 
 
-## RABBITMQ SERVER
+## RABBITMQ SERVER - Docker-Compose
 
 ```docker-compose.yml
 version: "3.7"
