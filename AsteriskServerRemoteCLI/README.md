@@ -1,7 +1,7 @@
 # Asterisk Server Remote CLI
 
 # Docker
-![AsteriskServerRemoteCLI]([file:///home/lordbasex/Descargas/AsteriskServerRemoteCLI.png](https://raw.githubusercontent.com/lordbasex/golang-examples/main/AsteriskServerRemoteCLI/AsteriskServerRemoteCLI.png))
+![AsteriskServerRemoteCLI](https://raw.githubusercontent.com/lordbasex/golang-examples/main/AsteriskServerRemoteCLI/AsteriskServerRemoteCLI.png)
 
 * RabbitMQ server required
 * Asterisk Server - IssabelPBX, FreePBX or VitalPBX
