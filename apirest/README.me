@@ -1,0 +1,41 @@
+# myAPP
+
+Este es un repositorio para mi aplicación Go que incluye un servicio de inicio de sesión con JWT y una base de datos MySQL.
+
+## Requisitos
+
+Para ejecutar esta aplicación, debes tener instalados los siguientes programas en tu sistema:
+
+- Go
+- Docker
+- Docker Compose
+
+## Construcción y ejecución con Docker
+
+Para construir y ejecutar esta aplicación en Docker, debes usar el archivo `Makefile` y el archivo `docker-compose.yml` proporcionados.
+
+Primero, crea el binario de la aplicación y la imagen de Docker con el comando:
+
+```
+make docker-build
+```
+
+Luego, levanta ambos servicios con el comando:
+
+```
+make docker-run
+```
+
+El servicio `myapp` estará disponible en el puerto 8080 de tu máquina y podrás acceder a él a través de `http://localhost:8080`. El servicio `mysql` estará disponible en el puerto 3307 y podrás acceder a él a través de `localhost:3307`. Tu aplicación se conectará a la base de datos a través de la dirección `mysql` y las credenciales proporcionadas en el archivo `docker-compose.yml`.
+
+## Estructura del código fuente
+
+El código fuente de esta aplicación está estructurado de la siguiente manera:
+
+- `api/`: contiene el código fuente de la API REST de la aplicación.
+  - `main.go`: archivo principal de la aplicación.
+  - `login.go`: contiene la lógica de inicio de sesión.
+  - `db.go`: contiene la lógica de conexión a la base de datos. También tiene la lógica de verificación de credenciales.
+  - `database.go`: Lógica de verificación de credenciales.
+
+

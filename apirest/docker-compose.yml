@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  myapp:
+    container_name: myapp
+    image: myapp
+    ports:
+      - 8080:8080
+    env_file:
+      - .env
+    depends_on:
+        dbapi:
+          condition: service_healthy
+    restart: unless-stopped
+
+  dbapi:
+    container_name: dbapi
+    image: mysql:8.0
+    env_file:
+      - .env
+    volumes:
+      - ./user-data/db:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
