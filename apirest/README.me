@@ -1,41 +1,82 @@
-# myAPP
+# API REST
 
-Este es un repositorio para mi aplicación Go que incluye un servicio de inicio de sesión con JWT y una base de datos MySQL.
+Este proyecto es una demostración de cómo crear una API REST en Go para fines educativos. La API proporciona diversos endpoints que permiten a los usuarios realizar operaciones CRUD (crear, leer, actualizar y eliminar) en una base de datos. También se ha implementado un sistema de autenticación y autorización mediante el uso de tokens JWT.
 
-## Requisitos
+Además, se han utilizado técnicas de optimización y mejora de seguridad, como Middleware para validar los argumentos de entrada y para agregar cabeceras de seguridad a las respuestas HTTP.
 
-Para ejecutar esta aplicación, debes tener instalados los siguientes programas en tu sistema:
+En resumen, este proyecto es una buena demostración de cómo crear una API REST segura y escalable en Go y puede ser utilizado como base para proyectos más complejos.
 
-- Go
-- Docker
-- Docker Compose
+# API REST
 
-## Construcción y ejecución con Docker
+This project is a demonstration of how to create a REST API in Go for educational purposes. The API provides various endpoints that allow users to perform CRUD (create, read, update, delete) operations on a database. An authentication and authorization system has also been implemented using JWT tokens.
 
-Para construir y ejecutar esta aplicación en Docker, debes usar el archivo `Makefile` y el archivo `docker-compose.yml` proporcionados.
+In addition, optimization and security enhancement techniques have been used, such as Middleware to validate input arguments and to add security headers to HTTP responses.
 
-Primero, crea el binario de la aplicación y la imagen de Docker con el comando:
+In summary, this project is a good demonstration of how to create a secure and scalable REST API in Go and can be used as a base for more complex projects.
 
+## Endpoint
+
+| Endpoint       | HTTP method | Description                                                 |
+|----------------|-------------|-------------------------------------------------------------|
+| `/login`       | `POST`      | Start a session and get an authentication token              |
+| `/customers`   | `GET`       | Get a customer by document number                           |
+| `/customers`   | `GET`       | Get a customer by customer number                           |
+| `/customers/list` | `GET`   | Get a list of all customers                                |
+
+To import the EXAMPLE APIREST collection into Postman, click [here](https://raw.githubusercontent.com/lordbasex/golang-examples/main/apirest/EXAMPLE%20APIREST.postman_collection.json).
+
+## Environment
+
+`DB_HOST`: The hostname or IP address of the database server.
+
+`DB_PORT`: The port number that the database server is listening on.
+
+`DB_USER`: The username that should be used to connect to the database.
+
+`DB_PASSWORD`: The password that should be used to connect to the database.
+
+`DB_NAME`: The name of the database to connect to.
+
+`MYSQL_ROOT_PASSWORD`: The root password for the MySQL server. This is used to create and manage other user accounts.
+
+`MYSQL_DATABASE`: The name of the database to be created and used by the application.
+
+`MYSQL_USER`: The name of the user to be created and used by the application to access the database.
+
+`MYSQL_PASSWORD`: The password for the `MYSQL_USER` account. This should be a strong, unique password.
+
+## Docker-Compose
+
+```docker-compose.yml
+
+version: "3.8"
+
+services:
+  myapp:
+    container_name: myapp
+    image: cnsoluciones/myapp
+    ports:
+      - 8080:8080
+    env_file:
+      - .env
+    depends_on:
+        dbapi:
+          condition: service_healthy
+    restart: unless-stopped
+
+  dbapi:
+    container_name: dbapi
+    image: mysql:8.0
+    env_file:
+      - .env
+    volumes:
+      - ./user-data/db:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
 ```
-make docker-build
-```
 
-Luego, levanta ambos servicios con el comando:
 
-```
-make docker-run
-```
 
-El servicio `myapp` estará disponible en el puerto 8080 de tu máquina y podrás acceder a él a través de `http://localhost:8080`. El servicio `mysql` estará disponible en el puerto 3307 y podrás acceder a él a través de `localhost:3307`. Tu aplicación se conectará a la base de datos a través de la dirección `mysql` y las credenciales proporcionadas en el archivo `docker-compose.yml`.
-
-## Estructura del código fuente
-
-El código fuente de esta aplicación está estructurado de la siguiente manera:
-
-- `api/`: contiene el código fuente de la API REST de la aplicación.
-  - `main.go`: archivo principal de la aplicación.
-  - `login.go`: contiene la lógica de inicio de sesión.
-  - `db.go`: contiene la lógica de conexión a la base de datos. También tiene la lógica de verificación de credenciales.
-  - `database.go`: Lógica de verificación de credenciales.
+Here's the link to the apirest directory on GitHub: [here](https://github.com/lordbasex/golang-examples/tree/main/apirest).
 
 
