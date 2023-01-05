@@ -2,11 +2,19 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
+
+// User representa una cuenta de usuario.
+type User struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
 
 // TokenResponse representa una respuesta JSON que contiene un JWT.
 type TokenResponse struct {
@@ -35,6 +43,8 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	// Parsea el cuerpo de la solicitud para obtener las credenciales de inicio de sesión del usuario.
 	var user User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		log.Print(r.Body)
+		log.Print(user)
 		http.Error(w, "Payload de solicitud no válido", http.StatusBadRequest)
 		return
 	}

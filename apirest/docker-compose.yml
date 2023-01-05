@@ -3,7 +3,7 @@ version: "3.8"
 services:
   myapp:
     container_name: myapp
-    image: myapp
+    image: cnsoluciones/myapp
     ports:
       - 8080:8080
     env_file:

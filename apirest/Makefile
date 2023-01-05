@@ -1,5 +1,5 @@
 # Nombre de la imagen de Docker.
-IMAGE_NAME = myapp
+IMAGE_NAME = cnsoluciones/myapp
 
 # Crea el binario de la aplicación.
 build:

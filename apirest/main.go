@@ -13,13 +13,21 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Crea la tabla de customer en la base de datos y inserta ejemplos de customer.
+	if err := createCustomersTable(); err != nil {
+		log.Fatal(err)
+	}
+
 	// Crea un nuevo enrutador.
 	router := mux.NewRouter()
 
-	// Agrega la ruta de inicio de sesión.
-	router.HandleFunc("/login", loginHandler).Methods("POST")
+	// Pasa todo por el Middleware
+	router.Use(jwtMiddleware)
 
-	// Agrega otras rutas aquí...
+	// Agrega la ruta de inicio de sesión.
+	router.HandleFunc("/login", authMiddleware(loginHandler)).Methods("POST")
+	router.HandleFunc("/customers", authMiddleware(customersHandler)).Methods("GET")
+	router.HandleFunc("/customers/list", authMiddleware(customersListHandler)).Methods("GET")
 
 	// Inicia el servidor.
 	log.Fatal(http.ListenAndServe(":8080", router))
