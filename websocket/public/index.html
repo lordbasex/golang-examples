@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accelerator</title>
+    <script src="./chart.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="./bootstrap.min.css">
+</head>
+
+<body>
+
+    <div class="container mt-1">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Accelerator</h5>
+                <canvas id="CPU" class="w-50 h-50"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Obtén el elemento del lienzo del gráfico
+        const chartCanvas = document.getElementById('acceleratorChart');
+
+        //PLUGIN counterCPU
+        const counterCPU = {
+            id: 'counterCPU',
+            beforeDraw(chart, args, options) {
+                const { ctx, chartArea: { top, right, left, width, height } } = chart;
+                ctx.save();
+                ctx.font = options.fontSize + ' ' + options.fontFamily;
+                ctx.textAlign = 'center';
+                ctx.fillStyle = options.fontColor;
+                ctx.fillText(dataPointsCPU[0] + '%', width / 2, top + (height / 2));
+            }
+        }
+
+        //CPU
+        var dataPointsCPU = [0, 100]
+        const dataCPU = {
+            labels: [
+                'CPU Used',
+                'CPU Total',
+            ],
+            datasets: [{
+                label: 'CPU Usage',
+                data: dataPointsCPU,
+                backgroundColor: [
+                    'rgb(244,32,101)',
+                    'rgb(101,200,101)'
+                ],
+                hoverOffset: 4,
+                cutout: '80%'
+            }]
+        }
+
+        const configCPU = {
+            type: 'doughnut',
+            data: dataCPU,
+            options: {
+                responsive: true,
+                plugins: {
+                    counterCPU: {
+                        fontColor: 'rgb(13, 110, 253)',
+                        fontSize: '60px',
+                        fontFamily: 'sans-serif'
+                    }
+                }
+            },
+            plugins: [counterCPU]
+        }
+
+        const CPU = new Chart(
+            document.getElementById('CPU'),
+            configCPU
+        )
+
+        const userID = "123456789"; // Reemplaza con el ID del usuario real
+
+        let socket = null;
+        let reconnectInterval = 5000; // Intervalo de tiempo para intentar la reconexión (en milisegundos)
+        let reconnectIntervalId = null; // ID del intervalo de tiempo para la reconexión
+
+        function connectWebSocket() {
+            socket = new WebSocket("ws://127.0.0.1:8080/ws?userID=" + userID);
+            console.log("Attempting Connection...");
+            //console.log(socket);
+
+            socket.onopen = () => {
+                console.log("successfully connected");
+                clearInterval(reconnectIntervalId); // Detiene el intento de reconexión si se conecta exitosamente
+
+                const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"; // Reemplaza con tu token válido
+                const icid = "55C9vqSUuqCzAylvJPlJEP/UBzw015PNDpi4KFZpv7g="; // Reemplaza con tu icid válido
+                const message = "ping"; // Reemplaza con tu mensaje válido
+
+                const payload = {
+                    headers: {
+                        Authorization: "Bearer " + token,
+                        icid: icid
+                    },
+                    content: message
+                };
+                console.log(`==== CLIENT ====`)
+                console.log(`RX => ${message}`)
+                socket.send(JSON.stringify(payload));
+            };
+
+            socket.onmessage = event => {
+                if (event.data == "pong"){
+                    console.log(`==== SERVER ====`)
+                    console.log(`TX <= ${event.data}`);
+                }else{
+                    console.log(`TX <= ${event.data}`);
+                    dataPointsCPU = [event.data, 100 - event.data];
+                    CPU.config.data.datasets[0].data = dataPointsCPU;
+                    CPU.update();
+                }
+            };
+
+            socket.onclose = event => {
+                console.log("Socket closed connection: ", event);
+                reconnect(); // Intenta la reconexión cuando se cierre la conexión
+            };
+
+            socket.onerror = error => {
+                console.log("Socket Error: ", error);
+                reconnect(); // Intenta la reconexión cuando haya un error en el socket
+            };
+        }
+
+        function reconnect() {
+            console.log("Trying to reconnect...");
+            reconnectIntervalId = setTimeout(connectWebSocket, reconnectInterval);
+        }
+
+        connectWebSocket(); // Inicia la conexión WebSocket
+
+    </script>
+
+</body>
+
+</html>
