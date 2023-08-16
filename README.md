@@ -28,6 +28,7 @@ ENDLINE
 cd /usr/src/
 wget https://go.dev/dl/go1.20.2.linux-amd64.tar.gz -O /usr/src/go1.20.2.linux-amd64.tar.gz
 rm -rf /usr/local/go && tar -C /usr/local -xzf go1.20.2.linux-amd64.tar.gz
+mkdir -p /root/go/{bin,pkg,src}
 
 cat >> /root/.bashrc <<ENDLINE
 
