@@ -1,59 +1,38 @@
-# API REST
+# API REST - Documentación de Endpoints
 
-Este proyecto es una demostración de cómo crear una API REST en Go para fines educativos. La API proporciona diversos endpoints que permiten a los usuarios realizar operaciones CRUD (crear, leer, actualizar y eliminar) en una base de datos. También se ha implementado un sistema de autenticación y autorización mediante el uso de tokens JWT.
+Este README proporciona una descripción detallada de los endpoints disponibles en la API REST desarrollada en Go. La API permite a los usuarios realizar operaciones CRUD en una base de datos y cuenta con autenticación y autorización implementadas mediante tokens JWT. También se han incorporado técnicas de optimización y seguridad para garantizar un funcionamiento seguro y eficiente.
 
-Además, se han utilizado técnicas de optimización y mejora de seguridad, como Middleware para validar los argumentos de entrada y para agregar cabeceras de seguridad a las respuestas HTTP.
+## Endpoints Disponibles
 
-En resumen, este proyecto es una buena demostración de cómo crear una API REST segura y escalable en Go y puede ser utilizado como base para proyectos más complejos.
+A continuación, se presenta una tabla que describe los endpoints disponibles, sus rutas, descripciones y requisitos de autenticación:
 
-# API REST
+| Número | Método | Ruta                                      | Descripción                                                                 | Autenticación |
+|--------|--------|-------------------------------------------|-----------------------------------------------------------------------------|---------------|
+| 1      | POST   | `/login`                                 | Inicio de sesión de usuario y obtención de token JWT válido.                | No            |
+| 2      | GET    | `/api/v1/hello`                          | Devuelve un saludo simple. Requiere autenticación.                         | Sí            |
+| 3      | GET    | `/api/v1/customer/document_number/{id}`  | Obtiene información de cliente por número de documento. Requiere autenticación. | Sí            |
+| 4      | GET    | `/api/v1/customer/customer_number/{id}`  | Obtiene información de cliente por número de cliente. Requiere autenticación. | Sí            |
+| 5      | POST   | `/api/v1/creditcard/create`              | Crea una nueva tarjeta de crédito. Requiere autenticación.                 | Sí            |
+| 6      | GET    | `/api/v1/creditcard/search`              | Recupera todas las tarjetas de crédito. Requiere autenticación.             | Sí            |
+| 7      | GET    | `/api/v1/creditcard/search/{uniqueid}`   | Recupera una tarjeta de crédito por ID único. Requiere autenticación.      | Sí            |
+| 8      | POST   | `/api/v1/survey/create`                 | Crea una nueva encuesta. Requiere autenticación.                           | Sí            |
+| 9      | PUT    | `/api/v1/survey/update/{uniqueid}`      | Actualiza una encuesta existente por ID único. Requiere autenticación.     | Sí            |
+| 10     | PUT    | `/api/v1/survey/aborted/{uniqueid}`     | Marca una encuesta como abortada por ID único. Requiere autenticación.     | Sí            |
 
-This project is a demonstration of how to create a REST API in Go for educational purposes. The API provides various endpoints that allow users to perform CRUD (create, read, update, delete) operations on a database. An authentication and authorization system has also been implemented using JWT tokens.
+## Ejecución Local con `go run`
 
-In addition, optimization and security enhancement techniques have been used, such as Middleware to validate input arguments and to add security headers to HTTP responses.
+1. Clona este repositorio en tu máquina local.
+2. Asegúrate de tener Go instalado.
+3. Instala las dependencias necesarias utilizando el comando `go get`.
+4. Crea un archivo `.env` en la raíz del proyecto y configura las variables de entorno según las indicaciones anteriores.
+5. Ejecuta la aplicación usando el comando `go run *.go`.
+6. Accede a los diferentes endpoints utilizando un cliente API (por ejemplo, Postman).
 
-In summary, this project is a good demonstration of how to create a secure and scalable REST API in Go and can be used as a base for more complex projects.
+## Ejecución con Docker Compose
 
-## Endpoint
+Puedes ejecutar esta aplicación junto con una base de datos MySQL utilizando Docker Compose. A continuación se muestra un ejemplo de un archivo `docker-compose.yml` que configura los servicios necesarios:
 
-| Endpoint       | HTTP method | Description                                                 |
-|----------------|-------------|-------------------------------------------------------------|
-| `/login`       | `POST`      | Start a session and get an authentication token              |
-| `/api/v1/customer/document_number/{id:[0-9]+}`   | `GET`       | Get a customer by document number                           |
-| `/api/v1/customer/customer_number/{id:[0-9]+}`   | `GET`       | Get a customer by customer number                           |
-
-
-To import the EXAMPLE APIREST collection into Postman, click [here](https://raw.githubusercontent.com/lordbasex/golang-examples/main/apirest/EXAMPLE%20APIREST.postman_collection.json).
-
-## Environment
-
-`DEBUG`: true o false logs
-
-`TOKEN_SECRET`: Secret token
-
-`DB_HOST`: The hostname or IP address of the database server.
-
-`DB_PORT`: The port number that the database server is listening on.
-
-`DB_USER`: The username that should be used to connect to the database.
-
-`DB_PASSWORD`: The password that should be used to connect to the database.
-
-`DB_NAME`: The name of the database to connect to.
-
-`MYSQL_ROOT_PASSWORD`: The root password for the MySQL server. This is used to create and manage other user accounts.
-
-`MYSQL_DATABASE`: The name of the database to be created and used by the application.
-
-`MYSQL_USER`: The name of the user to be created and used by the application to access the database.
-
-`MYSQL_PASSWORD`: The password for the `MYSQL_USER` account. This should be a strong, unique password.
-
-`MYSQL_ENC`: Secret key encode
-
-## Docker-Compose
-
-```docker-compose.yml
+```yaml
 version: "3.8"
 
 services:
@@ -101,7 +80,29 @@ services:
         MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 ```
 
+## Configuración de Variables de Entorno (.env)
 
+Aquí se explican las variables de entorno utilizadas en el archivo `.env`:
+
+| Variable              | Descripción                                                                 | Ejemplo                  |
+|-----------------------|-----------------------------------------------------------------------------|--------------------------|
+| `DEBUG`               | Define si la aplicación se ejecuta en modo de depuración.                  | `DEBUG=false`            |
+| `TOKEN_SECRET`        | Clave secreta utilizada para firmar y verificar tokens JWT.                | `TOKEN_SECRET=my-secret-token` |
+| `DB_HOST`             | Dirección del host de la base de datos interna.                            | `DB_HOST=dbapi`          |
+| `DB_PORT`             | Puerto de la base de datos interna.                                        | `DB_PORT=3306`           |
+| `DB_USER`             | Nombre de usuario de la base de datos interna.                             | `DB_USER=myuser`         |
+| `DB_PASSWORD`         | Contraseña del usuario de la base de datos interna.                         | `DB_PASSWORD=mypassword` |
+| `DB_NAME`             | Nombre de la base de datos interna.                                        | `DB_NAME=mydatabase`     |
+| `MYSQL_ROOT_PASSWORD` | Contraseña de root de la base de datos MySQL.                               | `MYSQL_ROOT_PASSWORD=my-secret-pw` |
+| `MYSQL_DATABASE`      | Nombre de la base de datos MySQL.                                          | `MYSQL_DATABASE=mydatabase` |
+| `MYSQL_USER`          | Nombre de usuario de la base de datos MySQL.                                | `MYSQL_USER=myuser`      |
+| `MYSQL_PASSWORD`      | Contraseña del usuario de la base de datos MySQL.                            | `MYSQL_PASSWORD=mypassword` |
+| `MYSQL_ENC`           | Cadena aleatoria o secreta para encriptación de datos sensibles.           | `MYSQL_ENC=my-secret-key-enc` |
+
+
+
+## Conclusiones
+Esta API REST desarrollada en Go es una demostración sólida de cómo crear un servicio seguro y escalable para realizar operaciones CRUD y autenticación utilizando tokens JWT. El uso de middlewares para validar argumentos y agregar cabeceras de seguridad aumenta la confiabilidad y la seguridad del sistema. Puedes utilizar este proyecto como punto de partida para desarrollar aplicaciones más complejas basadas en una API REST.
 
 Here's the link to the apirest directory on GitHub: [here](https://github.com/lordbasex/golang-examples/tree/main/apirest).
 
