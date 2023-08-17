@@ -1,0 +1,674 @@
+{
+	"info": {
+		"_postman_id": "31d9ce3d-6819-46ee-b29e-e54d29a02c53",
+		"name": "API IVR AUTOGESTION",
+		"description": "Ejemplo API REST para [Curso Asterisk Avanzado](https://github.com/lordbasex/curso-asterisk-docker).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "70265",
+		"_collection_link": "https://warped-moon-7456-1.postman.co/workspace/golang-api~66dbee57-d1fc-443e-8c08-5da394ba3dab/collection/70265-31d9ce3d-6819-46ee-b29e-e54d29a02c53?action=share&source=collection_link&creator=70265"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setEnvironmentVariable(\"jwt\",  JSON.parse(responseBody).token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user\": \"superadmin\",\n    \"password\": \"admin\"\n}"
+						},
+						"url": {
+							"raw": "{{domain-api-rest}}/login",
+							"host": [
+								"{{domain-api-rest}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "Login and get a JWT Token Authorization Bearer to use this api."
+					},
+					"response": [
+						{
+							"name": "Login Failed",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"myuser@mail.com\",\n    \"password\": \"IDontKnow\"\n}"
+								},
+								"url": {
+									"raw": "{{domain-api-rest-slimphp}}/login",
+									"host": [
+										"{{domain-api-rest-slimphp}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8080"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 22 May 2019 19:25:28 +0000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.3.4"
+								},
+								{
+									"key": "Content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "133"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Login failed: Email or password incorrect.\",\n    \"class\": \"UserException\",\n    \"status\": \"error\",\n    \"code\": 400\n}"
+						},
+						{
+							"name": "Login OK",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"m@b.com.ar\",\n    \"password\": \"123\"\n}"
+								},
+								"url": {
+									"raw": "{{domain-api-rest-slimphp}}/login",
+									"host": [
+										"{{domain-api-rest-slimphp}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8080"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 22 May 2019 19:24:12 +0000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.3.4"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Length",
+									"value": "291"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 200,\n    \"status\": \"success\",\n    \"message\": {\n        \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImVtYWlsIjoibUBiLmNvbS5hciIsIm5hbWUiOiJNTkIiLCJpYXQiOjE1NTg1NTMwNTIsImV4cCI6MTU1OTE1Nzg1Mn0.OQyICWlGW0oSUB-ANrYL2OJTdC2v0OQQO3RQQ3W_KLo\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "Document Number (DNI)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain-api-rest}}/api/v1/customer/document_number/12345678",
+							"host": [
+								"{{domain-api-rest}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"customer",
+								"document_number",
+								"12345678"
+							]
+						},
+						"description": "Número de Documento"
+					},
+					"response": []
+				},
+				{
+					"name": "Customer Number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain-api-rest}}/api/v1/customer/customer_number/123456789",
+							"host": [
+								"{{domain-api-rest}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"customer",
+								"customer_number",
+								"123456789"
+							]
+						},
+						"description": "Número de Documento"
+					},
+					"response": []
+				}
+			],
+			"description": "Manage Notes.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Hello",
+			"item": [
+				{
+					"name": "Hello",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain-api-rest}}/api/v1/hello",
+							"host": [
+								"{{domain-api-rest}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hello"
+							]
+						},
+						"description": "Hello World"
+					},
+					"response": []
+				}
+			],
+			"description": "Hello Word"
+		},
+		{
+			"name": "root",
+			"item": [
+				{
+					"name": "Root",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain-api-rest}}",
+							"host": [
+								"{{domain-api-rest}}"
+							]
+						},
+						"description": "Hello World"
+					},
+					"response": []
+				}
+			],
+			"description": "root",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Survey",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uniqueid\": \"1602686767.11\",\n    \"agent\": 2324,\n    \"queue\": 6000,\n    \"phone\": 5491161002324,\n    \"id_customer\": 1\n}"
+						},
+						"url": {
+							"raw": "{{domain-api-rest}}/api/v1/survey/create",
+							"host": [
+								"{{domain-api-rest}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"survey",
+								"create"
+							]
+						},
+						"description": "Create"
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"q3\": 3\n}"
+						},
+						"url": {
+							"raw": "{{domain-api-rest}}/api/v1/survey/update/1602686767.11",
+							"host": [
+								"{{domain-api-rest}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"survey",
+								"update",
+								"1602686767.11"
+							]
+						},
+						"description": "Update"
+					},
+					"response": []
+				},
+				{
+					"name": "Aborted",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{domain-api-rest}}/api/v1/survey/aborted/1602686767.11",
+							"host": [
+								"{{domain-api-rest}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"survey",
+								"aborted",
+								"1602686767.11"
+							]
+						},
+						"description": "Aborted"
+					},
+					"response": []
+				}
+			],
+			"description": "Survey"
+		},
+		{
+			"name": "Credit Card",
+			"item": [
+				{
+					"name": "Credit Card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setEnvironmentVariable(\"uniqueid\",  JSON.parse(responseBody).uniqueid);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uniqueid\":\"1602586167.15\",\n    \"card\": 1111222244445555,\n    \"expiration_date\": 1221,\n    \"security_code\": 123,\n    \"amount\": 5100,\n    \"id_customer\": 1\n}"
+						},
+						"url": {
+							"raw": "{{domain-api-rest}}/api/v1/creditcard/create",
+							"host": [
+								"{{domain-api-rest}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"creditcard",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SearchAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setEnvironmentVariable(\"uniqueid\",  JSON.parse(responseBody).uniqueid);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uniqueid\":\"1602586167.13\",\n    \"card\": 1111222244445555,\n    \"expiration_date\": 1221,\n    \"security_code\": 123,\n    \"amount\": 5100,\n    \"id_customer\": 1\n}"
+						},
+						"url": {
+							"raw": "{{domain-api-rest}}/api/v1/creditcard/search",
+							"host": [
+								"{{domain-api-rest}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"creditcard",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search by uniqueid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain-api-rest}}/api/v1/creditcard/search/1602586167.15",
+							"host": [
+								"{{domain-api-rest}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"creditcard",
+								"search",
+								"1602586167.15"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Credit Card"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

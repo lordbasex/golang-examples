@@ -1,24 +1,27 @@
 version: "3.8"
 
 services:
-  myapp:
-    container_name: myapp
-    image: cnsoluciones/myapp
-    ports:
-      - 8080:8080
-    env_file:
-      - .env
-    depends_on:
-        dbapi:
-          condition: service_healthy
-    restart: unless-stopped
+  # myapp:
+  #   container_name: myapp
+  #   image: cnsoluciones/myapp
+  #   ports:
+  #     - 1444:8080
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #       dbapi:
+  #         condition: service_healthy
+  #   restart: unless-stopped
 
   dbapi:
     container_name: dbapi
     image: mysql:8.0
+    ports:
+      - 3306:3306
     env_file:
       - .env
     volumes:
       - ./user-data/db:/var/lib/mysql
+    command: ["sh", "-c", "echo '[mysqld]' > /etc/mysql/conf.d/api.cnf && echo 'default-authentication-plugin = mysql_native_password' >> /etc/mysql/conf.d/api.cnf && echo 'block_encryption_mode=aes-256-ecb' >> /etc/mysql/conf.d/api.cnf && docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"]
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD

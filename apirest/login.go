@@ -9,33 +9,18 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-// User representa una cuenta de usuario.
-type User struct {
-	ID       int    `json:"id"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-// TokenResponse representa una respuesta JSON que contiene un JWT.
-type TokenResponse struct {
-	Token string `json:"token"`
-}
-
-// secret es una clave privada utilizada para firmar JWTs.
-var secret = []byte("my-secret")
-
-// createJWT crea un nuevo JWT para un usuario.
+// createJWT
 func createJWT(user *User) (string, error) {
 	// Crea un nuevo objeto de token, especificando el método de firma y las reclamaciones
 	// que deseas que contenga.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":       user.ID,
-		"username": user.Username,
-		"exp":      time.Now().Add(time.Hour * 72).Unix(),
+		"id":   user.ID,
+		"user": user.User,
+		"exp":  time.Now().Add(time.Hour * 72).Unix(),
 	})
 
 	// Firma y obtiene el token codificado completo como una cadena utilizando la clave secreta.
-	return token.SignedString(secret)
+	return token.SignedString(Secret)
 }
 
 // loginHandler maneja las solicitudes de inicio de sesión.
@@ -50,7 +35,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Verifica si las credenciales de inicio de sesión proporcionadas son válidas.
-	dbUser, err := verifyCredentials(user.Username, user.Password)
+	dbUser, err := verifyCredentials(user.User, user.Password)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
