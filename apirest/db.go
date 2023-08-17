@@ -8,14 +8,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const (
-	dbHost     = "DB_HOST"
-	dbPort     = "DB_PORT"
-	dbUser     = "DB_USER"
-	dbPassword = "DB_PASSWORD"
-	dbName     = "DB_NAME"
-)
-
 // ConnectDB conecta a la base de datos y devuelve una conexión abierta.
 func ConnectDB() (*sql.DB, error) {
 	host := os.Getenv(dbHost)
