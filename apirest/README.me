@@ -19,8 +19,8 @@ In summary, this project is a good demonstration of how to create a secure and s
 | Endpoint       | HTTP method | Description                                                 |
 |----------------|-------------|-------------------------------------------------------------|
 | `/login`       | `POST`      | Start a session and get an authentication token              |
-| `/customers`   | `GET`       | Get a customer by document number                           |
-| `/customers`   | `GET`       | Get a customer by customer number                           |
+| `/api/v1/customer/document_number/{id:[0-9]+}`   | `GET`       | Get a customer by document number                           |
+| `/api/v1/customer/customer_number/{id:[0-9]+}`   | `GET`       | Get a customer by customer number                           |
 
 
 To import the EXAMPLE APIREST collection into Postman, click [here](https://raw.githubusercontent.com/lordbasex/golang-examples/main/apirest/EXAMPLE%20APIREST.postman_collection.json).
