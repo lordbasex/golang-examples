@@ -1,0 +1,84 @@
+# API REST - Endpoint Documentation
+
+This README provides a detailed description of the available endpoints in the REST API developed in Go. The API enables users to perform CRUD operations on a database and features authentication and authorization implemented using JWT tokens. Optimization and security techniques have also been incorporated to ensure secure and efficient operation.
+
+## Available Endpoints
+
+Below is a table that describes the available endpoints, their routes, descriptions, and authentication requirements:
+
+| Number | Method | Route                                    | Description                                                        | Authentication |
+|--------|--------|------------------------------------------|--------------------------------------------------------------------|----------------|
+| 1      | POST   | `/login`                                | User login and retrieval of a valid JWT token.                    | No             |
+| 2      | GET    | `/api/v1/hello`                         | Returns a simple greeting. Requires authentication.               | Yes            |
+| 3      | GET    | `/api/v1/customer/document_number/{id}` | Retrieves customer information by document number. Requires authentication. | Yes            |
+| 4      | GET    | `/api/v1/customer/customer_number/{id}` | Retrieves customer information by customer number. Requires authentication. | Yes            |
+| 5      | POST   | `/api/v1/creditcard/create`             | Creates a new credit card. Requires authentication.              | Yes            |
+| 6      | GET    | `/api/v1/creditcard/search`             | Retrieves all credit cards. Requires authentication.             | Yes            |
+| 7      | GET    | `/api/v1/creditcard/search/{uniqueid}`  | Retrieves a credit card by unique ID. Requires authentication.   | Yes            |
+| 8      | POST   | `/api/v1/survey/create`                | Creates a new survey. Requires authentication.                   | Yes            |
+| 9      | PUT    | `/api/v1/survey/update/{uniqueid}`     | Updates an existing survey by unique ID. Requires authentication.| Yes            |
+| 10     | PUT    | `/api/v1/survey/aborted/{uniqueid}`    | Marks a survey as aborted by unique ID. Requires authentication.| Yes            |
+
+## Local Execution using `go run`
+
+1. Clone this repository to your local machine.
+2. Ensure you have Go installed.
+3. Install the necessary dependencies using the `go get` command.
+4. Create a `.env` file in the project root and configure the environment variables as per the instructions above.
+5. Run the application using the command `go run *.go`.
+6. Access the various endpoints using an API client (e.g., Postman).
+
+## Execution with Docker Compose
+
+You can run this application alongside a MySQL database using Docker Compose. Below is an example `docker-compose.yml` file configuring the necessary services:
+
+```yaml
+version: "3.8"
+
+services:
+  myapp:
+    container_name: myapp
+    image: cnsoluciones/myapp
+    ports:
+      - 1444:1444
+    env_file:
+      - .env
+    depends_on:
+        dbapi:
+          condition: service_healthy
+    restart: unless-stopped
+
+  dbapi:
+    container_name: dbapi
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    env_file:
+      - .env
+    volumes:
+      - ./user-data/db:/var/lib/mysql
+    command: ["sh", "-c", "echo '[mysqld]' > /etc/mysql/conf.d/api.cnf && echo 'default-authentication-plugin = mysql_native_password' >> /etc/mysql/conf.d/api.cnf && echo 'block_encryption_mode=aes-256-ecb' >> /etc/mysql/conf.d/api.cnf && docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"]
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    links:
+        - dbapi
+    depends_on:
+        dbapi:
+          condition: service_healthy
+    ports:
+        - 9191:80
+    environment:
+        PMA_HOST: dbapi
+        PMA_PORT: 3306
+        MYSQL_USERNAME: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+```
+
+## Environment Variable Configuration (.env)
+Here is an explanation of the environment variables used in the .env file:
