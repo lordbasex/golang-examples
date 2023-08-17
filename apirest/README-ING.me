@@ -82,3 +82,22 @@ services:
 
 ## Environment Variable Configuration (.env)
 Here is an explanation of the environment variables used in the .env file:
+
+| Variable              | Description                                                                 | Example                  |
+|-----------------------|-----------------------------------------------------------------------------|--------------------------|
+| `DEBUG`               | Determines whether the application runs in debug mode.                      | `DEBUG=false`            |
+| `TOKEN_SECRET`        | Secret key used for signing and verifying JWT tokens.                      | `TOKEN_SECRET=my-secret-token` |
+| `DB_HOST`             | Address of the internal database host.                                     | `DB_HOST=dbapi`          |
+| `DB_PORT`             | Port of the internal database.                                             | `DB_PORT=3306`           |
+| `DB_USER`             | Username for the internal database.                                        | `DB_USER=myuser`         |
+| `DB_PASSWORD`         | Password for the internal database user.                                   | `DB_PASSWORD=mypassword` |
+| `DB_NAME`             | Name of the internal database.                                             | `DB_NAME=mydatabase`     |
+| `MYSQL_ROOT_PASSWORD` | MySQL database root password.                                              | `MYSQL_ROOT_PASSWORD=my-secret-pw` |
+| `MYSQL_DATABASE`      | Name of the MySQL database.                                                | `MYSQL_DATABASE=mydatabase` |
+| `MYSQL_USER`          | Username for the MySQL database.                                           | `MYSQL_USER=myuser`      |
+| `MYSQL_PASSWORD`      | Password for the MySQL database user.                                       | `MYSQL_PASSWORD=mypassword` |
+| `MYSQL_ENC`           | Random or secret key for encrypting sensitive data.                         | `MYSQL_ENC=my-secret-key-enc` |
+
+
+## Conclusion
+This REST API developed in Go demonstrates how to create a secure and scalable service for CRUD operations and authentication using JWT tokens. The use of middlewares to validate arguments and add security headers enhances system reliability and security. You can use this project as a starting point to develop more complex applications based on a REST API.
