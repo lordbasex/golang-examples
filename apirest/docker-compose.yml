@@ -1,17 +1,17 @@
 version: "3.8"
 
 services:
-  # myapp:
-  #   container_name: myapp
-  #   image: cnsoluciones/myapp
-  #   ports:
-  #     - 1444:8080
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #       dbapi:
-  #         condition: service_healthy
-  #   restart: unless-stopped
+  myapp:
+    container_name: myapp
+    image: cnsoluciones/myapp
+    ports:
+      - 1444:1444
+    env_file:
+      - .env
+    depends_on:
+        dbapi:
+          condition: service_healthy
+    restart: unless-stopped
 
   dbapi:
     container_name: dbapi
