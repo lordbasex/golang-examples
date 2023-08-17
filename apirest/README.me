@@ -21,11 +21,15 @@ In summary, this project is a good demonstration of how to create a secure and s
 | `/login`       | `POST`      | Start a session and get an authentication token              |
 | `/customers`   | `GET`       | Get a customer by document number                           |
 | `/customers`   | `GET`       | Get a customer by customer number                           |
-| `/customers/list` | `GET`   | Get a list of all customers                                |
+
 
 To import the EXAMPLE APIREST collection into Postman, click [here](https://raw.githubusercontent.com/lordbasex/golang-examples/main/apirest/EXAMPLE%20APIREST.postman_collection.json).
 
 ## Environment
+
+`DEBUG`: true o false logs
+
+`TOKEN_SECRET`: Secret token
 
 `DB_HOST`: The hostname or IP address of the database server.
 
@@ -45,10 +49,11 @@ To import the EXAMPLE APIREST collection into Postman, click [here](https://raw.
 
 `MYSQL_PASSWORD`: The password for the `MYSQL_USER` account. This should be a strong, unique password.
 
+`MYSQL_ENC`: Secret key encode
+
 ## Docker-Compose
 
 ```docker-compose.yml
-
 version: "3.8"
 
 services:
@@ -56,7 +61,7 @@ services:
     container_name: myapp
     image: cnsoluciones/myapp
     ports:
-      - 8080:8080
+      - 1444:1444
     env_file:
       - .env
     depends_on:
@@ -67,12 +72,33 @@ services:
   dbapi:
     container_name: dbapi
     image: mysql:8.0
+    ports:
+      - 3306:3306
     env_file:
       - .env
     volumes:
       - ./user-data/db:/var/lib/mysql
+    command: ["sh", "-c", "echo '[mysqld]' > /etc/mysql/conf.d/api.cnf && echo 'default-authentication-plugin = mysql_native_password' >> /etc/mysql/conf.d/api.cnf && echo 'block_encryption_mode=aes-256-ecb' >> /etc/mysql/conf.d/api.cnf && docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"]
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    links:
+        - dbapi
+    depends_on:
+        dbapi:
+          condition: service_healthy
+    ports:
+        - 9191:80
+    environment:
+        PMA_HOST: dbapi
+        PMA_PORT: 3306
+        MYSQL_USERNAME: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 ```
 
 
