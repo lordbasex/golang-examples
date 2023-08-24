@@ -1,0 +1,34 @@
+# Generador de Claves SSH RSA en Go
+
+Este programa en Go genera un par de claves SSH RSA de 4096 bits y muestra las claves resultantes en la salida estándar. Utiliza los paquetes `crypto/rsa` y `golang.org/x/crypto/ssh` para realizar las operaciones criptográficas y la manipulación de claves SSH.
+
+## Uso
+
+1. Asegúrate de tener Go instalado en tu sistema.
+
+2. Clona este repositorio o copia el código en un archivo llamado `ssh_key_generator.go`.
+
+3. Ejecuta el siguiente comando para generar el par de claves SSH:
+
+```sh
+ go mod init ssh-keygen-go
+ go mod tidy
+ go run ssh_key_generator.go
+```
+
+El programa generará una clave privada y una clave pública. La clave privada se mostrará en formato PEM, y la clave pública se mostrará en formato SSH autorizado.
+
+## Dependencias
+
+Este programa utiliza los siguientes paquetes de Go:
+
+- `crypto/rand`: Utilizado para generar valores aleatorios necesarios para las claves.
+- `crypto/rsa`: Utilizado para generar el par de claves RSA.
+- `crypto/x509`: Utilizado para codificar la clave privada en formato PEM.
+- `golang.org/x/crypto/ssh`: Utilizado para generar y manipular claves SSH.
+
+## Notas
+
+- Asegúrate de manejar con cuidado la clave privada generada, ya que es sensible y se debe guardar de manera segura.
+
+- Las claves generadas son adecuadas para fines de demostración y desarrollo. Para entornos de producción, se recomienda seguir las mejores prácticas de seguridad y utilizar claves generadas de manera segura.
