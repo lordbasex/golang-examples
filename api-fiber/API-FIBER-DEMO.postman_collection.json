@@ -1,0 +1,245 @@
+{
+	"info": {
+		"_postman_id": "c97ea4e2-fe79-4440-9a4e-5b89326f3585",
+		"name": "API-FIBER-DEMO",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "70265"
+	},
+	"item": [
+		{
+			"name": "LOGIN",
+			"item": [
+				{
+					"name": "LOGIN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setEnvironmentVariable(\"jwt\",  JSON.parse(responseBody).token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"lord.basex@gmail.com\",\n    \"password\": \"I'llBeBack\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain-api-rest}}/login",
+							"host": [
+								"{{domain-api-rest}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "LOGIN",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"lord.basex@gmail.com\",\n    \"password\": \"I'llBeBack\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domain-api-rest}}/login",
+									"host": [
+										"{{domain-api-rest}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "MyApiFiberDemo"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 01 Jan 2024 15:36:53 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "614"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"msg\": \"Successful login\",\n    \"status\": 200,\n    \"token\": \"eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZ1bGxuYW1lIjoiRmVkZXJpY28gUGVyZWlyYSIsImVtYWlsIjoibG9yZC5iYXNleEBnbWFpbC5jb20iLCJwYXNzd29yZCI6InBsb2tpaiJ9LCJleHAiOjE3MDQyMDk4MTMsImlhdCI6MTcwNDEyMzQxMywibmJmIjoxNzA0MTIzNDEzfQ.B95KtM_-O_IZ92kXp_zNBhiTU8_7EitAcPlKei51sA22eUdmhCmTSkBY4qeFTWvZYe7G4J5jemebeAdQ8lVfSAh0R6f_jvLi_lsNShpIdec-BZDus8riLvR1bIZRSvPb_OllPzj2zmrgchcBoYcmyOlQ1MtZHTIzs9KLxsHiAlLOnZEyGe4iCKGpxY710gkfTre17FXO-IaZo-KXmDsiohXbkEkRFI_XPUL8BpmERycGGGbesVa8KMvKrfuuNFddKQNeRQ3YDtqmL-ct_WA2yEw_GfAXLq67_VMti9Ww3npcmGXLEW_Qz82SV3w67OeQMFm_eIlhg_XdBFm6\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "HELLO",
+			"item": [
+				{
+					"name": "HELLO",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain-api-rest}}/api/v1/hello",
+							"host": [
+								"{{domain-api-rest}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hello"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "HELLO",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{jwt}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain-api-rest}}/api/v1/hello",
+									"host": [
+										"{{domain-api-rest}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hello"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "MyApiFiberDemo"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 01 Jan 2024 15:37:17 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "38"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Hello, Federico Pereira!\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
