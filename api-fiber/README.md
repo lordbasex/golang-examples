@@ -47,7 +47,8 @@ This README provides an overview of the structure and configuration of the "API 
 
 2. Run the following command to start the API:
    ```bash
-   go run main.go```
+   go run main.go
+   ```
 
 
 ## Dependencies
@@ -71,13 +72,15 @@ Follow these steps to set up and run the API:
 2. **Clone the Repository:**
    ```bash
    git clone https://github.com/lordbasex/golang-examples.git
-   cd api-fiber```
+   cd golang-examples/api-fiber
+   ```
 
 3. **Create a `.env` file based on the provided `.env` template and update the configurations.**
 
 4. **Run the application:**
    ```bash
-   go run main.go```
+   go run main.go
+   ```
 
 
 ## Contributing
