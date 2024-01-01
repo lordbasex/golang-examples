@@ -70,7 +70,7 @@ Follow these steps to set up and run the API:
 
 2. **Clone the Repository:**
    ```bash
-   git clone https://github.com/lordbasex/api-fiber.git
+   git clone https://github.com/lordbasex/golang-examples.git
    cd api-fiber```
 
 3. **Create a `.env` file based on the provided `.env` template and update the configurations.**
