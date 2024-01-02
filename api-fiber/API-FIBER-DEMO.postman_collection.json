@@ -115,7 +115,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"msg\": \"Successful login\",\n    \"status\": 200,\n    \"token\": \"eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZ1bGxuYW1lIjoiRmVkZXJpY28gUGVyZWlyYSIsImVtYWlsIjoibG9yZC5iYXNleEBnbWFpbC5jb20iLCJwYXNzd29yZCI6InBsb2tpaiJ9LCJleHAiOjE3MDQyMDk4MTMsImlhdCI6MTcwNDEyMzQxMywibmJmIjoxNzA0MTIzNDEzfQ.B95KtM_-O_IZ92kXp_zNBhiTU8_7EitAcPlKei51sA22eUdmhCmTSkBY4qeFTWvZYe7G4J5jemebeAdQ8lVfSAh0R6f_jvLi_lsNShpIdec-BZDus8riLvR1bIZRSvPb_OllPzj2zmrgchcBoYcmyOlQ1MtZHTIzs9KLxsHiAlLOnZEyGe4iCKGpxY710gkfTre17FXO-IaZo-KXmDsiohXbkEkRFI_XPUL8BpmERycGGGbesVa8KMvKrfuuNFddKQNeRQ3YDtqmL-ct_WA2yEw_GfAXLq67_VMti9Ww3npcmGXLEW_Qz82SV3w67OeQMFm_eIlhg_XdBFm6\"\n}"
+							"body": "{\n    \"msg\": \"Successful login\",\n    \"status\": 200,\n    \"token\": \"XXXXXXXXXXX\"\n}"
 						}
 					]
 				}
