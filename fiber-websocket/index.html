@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Example</title>
+</head>
+<body>
+
+<script>
+  // Crear una conexión WebSocket
+  const socket = new WebSocket('ws://localhost:3000/ws/123?v=1.0');
+
+  // Evento que se ejecuta cuando la conexión se establece con éxito
+  socket.addEventListener('open', (event) => {
+    console.log('Conexión establecida con el servidor');
+    
+    // Enviar un mensaje al servidor después de la conexión exitosa
+    socket.send('¡Hola, servidor!');
+  });
+
+  // Evento que se ejecuta cuando se recibe un mensaje del servidor
+  socket.addEventListener('message', (event) => {
+    console.log('Mensaje del servidor:', event.data);
+  });
+
+  // Evento que se ejecuta cuando hay un error en la conexión
+  socket.addEventListener('error', (event) => {
+    console.error('Error en la conexión:', event);
+  });
+
+  // Evento que se ejecuta cuando la conexión se cierra
+  socket.addEventListener('close', (event) => {
+    console.log('Conexión cerrada:', event);
+  });
+
+  // Cerrar la conexión WebSocket cuando el usuario cierre la página
+  window.addEventListener('beforeunload', () => {
+    socket.close();
+  });
+</script>
+
+</body>
+
+
+</html>
