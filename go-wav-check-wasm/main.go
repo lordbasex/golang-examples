@@ -10,7 +10,7 @@ import (
 	"github.com/go-audio/wav"
 )
 
-var debugMode bool = false //defauilt false
+var debugMode bool = false //default false
 var quit = make(chan struct{})
 
 func customLog(msg string, a ...interface{}) {
