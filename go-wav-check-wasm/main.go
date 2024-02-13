@@ -10,7 +10,7 @@ import (
 	"github.com/go-audio/wav"
 )
 
-var debugMode bool = false //default false
+var debugMode bool = false //defauilt false
 var quit = make(chan struct{})
 
 func customLog(msg string, a ...interface{}) {
@@ -35,7 +35,14 @@ func registerCallbacks() {
 func debug(this js.Value, p []js.Value) interface{} {
 	if len(p) > 0 && p[0].Type() == js.TypeBoolean {
 		debugMode = p[0].Bool()
-		customLog("Debug mode set to:", debugMode)
+	} else {
+		debugMode = true
+	}
+
+	if debugMode {
+		customLog("Debug mode enabled.")
+	} else {
+		customLog("Debug mode disabled.")
 	}
 
 	return nil
