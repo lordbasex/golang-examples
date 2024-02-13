@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebAssembly WAV Checker</title>
+</head>
+<body>
+<!-- Include wasm_exec.js before using Go object -->
+<script src="wasm_exec.js"></script>
+
+<input type="file" id="fileInput" accept="audio/wav" />
+<button id="checkButton">Check WAV File</button>
+
+<script>
+	//debug - default false
+	//debug(false) -> Debug mode disabled.
+	//debug(true) -> Debug mode enabled.
+
+
+    // Define la función handleResult
+    function handleResult(result) {
+		if (result !== null) {
+        	console.log(result);
+		}
+    }
+
+    // Cargar el archivo WebAssembly
+    const go = new Go();
+    WebAssembly.instantiateStreaming(fetch('main.wasm'), go.importObject).then((result) => {
+        go.run(result.instance);
+    });
+
+    // Obtener el botón y el input de archivo
+    const button = document.getElementById('checkButton');
+    const fileInput = document.getElementById('fileInput');
+
+    // Re-definir la instancia de WebAssembly al cambiar el archivo
+    fileInput.onchange = async () => {
+        const result = await start();
+        handleResult(result);
+    };
+</script>
+
+</body>
+</html>
