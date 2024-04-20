@@ -1,7 +1,7 @@
 # golang-examples
 Go Lang - Examples
 
-![golang-examples](https://github.com/lordbasex/golang-examples/blob/main/gophers.png|width=100)
+<img src="https://github.com/lordbasex/golang-examples/blob/main/gophers.png" width="100">
 
 GoLang Example is a GNU project providing a collection of useful functions for those looking to learn GoLang. From basic operations to advanced techniques, this library serves as an invaluable guide to mastering the language. Explore and enhance your Go skills with ease!
 
