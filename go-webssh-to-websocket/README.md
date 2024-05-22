@@ -6,7 +6,7 @@ This project allows you to connect to an SSH server over WebSocket directly from
 It is based on the GO SSH TO WEBSOCKET project by Razikus but has been redesigned to use the Fiber framework and additional libraries.
 
 
-
+![GO WEBSSH TO WEBSOCKET](https://github.com/lordbasex/golang-examples/blob/main/go-webssh-to-websocket/images.png)
 
 
 ## Features
