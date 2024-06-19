@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Go WASM MP3 to WAV</title>
+</head>
+<body>
+    <input type="file" id="fileInput">
+    <audio id="audioPlayer" controls style="display: none;"></audio>
+    <a id="downloadButton" style="display: none;">Download WAV</a>
+    <script src="wasm_exec.js"></script>
+    <script>
+        const go = new Go();
+        WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+            go.run(result.instance);
+
+            document.getElementById('fileInput').addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        // Llamar a la función de Go para procesar el archivo
+                        if (typeof start === 'function') {
+                            start().then(wav => {
+                                //console.log(wav);
+                                handleResult(wav);
+                            }).catch(console.error);
+                        } else {
+                            console.error('Function start is not defined.');
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                }
+            });
+        });
+
+        function handleResult(result) {
+            //console.log("Result received:", result);
+
+            // Crear un Blob a partir del Uint8Array resultante
+            const blob = new Blob([result], { type: 'audio/wav' });
+
+            // Crear una URL para el Blob y establecerlo como la fuente del elemento de audio
+            const url = URL.createObjectURL(blob);
+            const audioPlayer = document.getElementById('audioPlayer');
+            audioPlayer.src = url;
+            audioPlayer.style.display = 'block';
+            audioPlayer.play();
+
+            // Crear un enlace de descarga para el archivo WAV
+            const downloadButton = document.getElementById('downloadButton');
+            downloadButton.href = url;
+            downloadButton.download = 'converted.wav';
+            downloadButton.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
