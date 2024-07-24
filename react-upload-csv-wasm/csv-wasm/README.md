@@ -83,7 +83,7 @@ Inicia un servidor web para servir estos archivos. Puedes usar un servidor web s
 ```sh
 http-server -p 8080
 ```
-Abre tu navegador y navega a http://localhost:8000 (o el puerto que http.server esté usando).
+Abre tu navegador y navega a http://localhost:8080 (o el puerto que http.server esté usando).
 
 Carga un archivo CSV usando el input y verifica que el JSON se muestre en el div de salida.
 
