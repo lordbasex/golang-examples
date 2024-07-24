@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WASM CSV Processor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    #csvInput {
+      margin-bottom: 20px;
+    }
+    #output {
+      background-color: #282c34;
+      color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 600px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>WASM CSV Processor</h1>
+  <!-- Input para cargar archivos CSV -->
+  <input type="file" id="csvInput" accept=".csv">
+  <!-- Div para mostrar el JSON resultante -->
+  <div id="output"></div>
+
+  <!-- Script para cargar wasm_exec.js -->
+  <script src="wasm_exec.js"></script>
+  <script>
+    // Crear una instancia de Go
+    const go = new Go();
+    
+    // Cargar y ejecutar el módulo WASM
+    WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then(result => {
+      go.run(result.instance);
+    });
+
+    // Manejar el evento de cambio de archivo
+    document.getElementById('csvInput').addEventListener('change', event => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const csvString = reader.result;
+          // Llamar a la función processCSV del WASM y obtener el JSON resultante
+          const jsonResponse = window.processCSV(csvString);
+          const parsedResult = JSON.parse(jsonResponse);
+
+          // Muestra el response del resultado de WASM
+          console.log(parsedResult)
+
+          // Mostrar el JSON en el div de salida
+          const outputDiv = document.getElementById('output');
+          outputDiv.textContent = JSON.stringify(parsedResult, null, 2);
+        };
+        reader.readAsText(file);
+      }
+    });
+  </script>
+</body>
+</html>

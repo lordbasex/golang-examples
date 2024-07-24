@@ -1,0 +1,89 @@
+
+
+/* src/App.css */
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+}
+
+.App {
+  text-align: center;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 1200px;
+}
+
+.App h1 {
+  font-size: 24px;
+  color: #333333;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.uploader, .json-output {
+  width: 48%;
+}
+
+.dropzone {
+  margin: 20px auto;
+  padding: 20px;
+  border: 2px dashed #cccccc;
+  border-radius: 10px;
+  background-color: #fafafa;
+  color: #333333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.dropzone:hover {
+  background-color: #e0e0e0;
+}
+
+.dropzone p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.table {
+  margin: 20px auto;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table th,
+.table td {
+  border: 1px solid #cccccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f2f2f2;
+}
+
+.json-viewer {
+  text-align: left;
+  margin-top: 20px;
+  background: #282c34;
+  padding: 20px;
+  border-radius: 10px;
+  color: #ffffff;
+  overflow: auto;
+}
