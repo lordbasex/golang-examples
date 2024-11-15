@@ -1,6 +1,7 @@
 # go-alias-words
 go-alias-words es una biblioteca en Go para generar alias únicos y memorables, ideales para aplicaciones bancarias y sistemas que requieran identificadores amigables. 
 Utiliza combinaciones de palabras en español, nombres de animales, ciudades de América Latina y números para crear alias en formatos de fácil recordación, como PALABRA.PALABRA.NUMERO. 
+
 La biblioteca garantiza que los alias sean únicos y cumplan con criterios específicos de usabilidad y simplicidad visual, facilitando su integración en sistemas que prioricen la experiencia del usuario.
 
 
