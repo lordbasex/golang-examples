@@ -27,6 +27,11 @@ type CoreShowChannelEvent struct {
 }
 
 func main() {
+	version := "1.0.0"
+	fmt.Printf("go-asterisk-core-show-channels v%s Copyright (C) 2012 - 2025, CNSoluciones \n", version)
+	fmt.Println("Created by Federico Pereira <fpereira@cnsoluciones.com>")
+	fmt.Println()
+
 	// Definir los flags para los argumentos de la línea de comandos
 	host := flag.String("host", "", "Host for AMI (default from ENV or config)")
 	port := flag.String("port", "", "Port for AMI (default from ENV or config)")

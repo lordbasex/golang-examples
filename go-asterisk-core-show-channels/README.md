@@ -56,20 +56,16 @@ export AMI_PASSWORD=my_password
 Alternatively, you can configure the application via command-line arguments:
 
 ```bash
-./asterisk-core-show-channels-aarch64 -host=127.0.0.1 -port=5038 -username=my_user -password=my_password
+./go-asterisk-core-show-channels-linux-xxxx -host=127.0.0.1 -port=5038 -username=my_user -password=my_password
 ```
-or 
 
-```bash
-./asterisk-core-show-channels-amd64 -host=127.0.0.1 -port=5038 -username=my_user -password=my_password
-```
 
 ### Usage
 
 After building the application, you can run it with the following command:
 
 ```bash
-./asterisk-core-show-channels-xxx
+./go-asterisk-core-show-channels-linux-xxxx
 ```
 
 By default, it will connect to `127.0.0.1:5038` with the username `admin` and password `password`. You can override these values using environment variables or command-line arguments.
@@ -79,6 +75,10 @@ Once connected, the application will continuously retrieve information from the 
 Example output:
 
 ```
+./go-asterisk-core-show-channels-macos-amd64 -host=127.0.0.1 -port=5038 -username=my_user -password=my_password
+go-asterisk-core-show-channels v1.0.0 Copyright (C) 2012 - 2025, CNSoluciones 
+Created by Federico Pereira <fpereira@cnsoluciones.com>
+
 Connected: Asterisk Call Manager/7.0.3
 --------------->>
 Channel: SIP/ANTEL-CELU-0000001e
