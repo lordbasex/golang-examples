@@ -1,8 +1,7 @@
 
 # GO Asterisk Core Show Channels - AMI Client
 
-Lord BaseX (c) 2014-2025
- Federico Pereira lord.basex@gmail.com
+Created by Federico Pereira <fpereira@cnsoluciones.com>
 
 This Go application connects to an Asterisk server via the Asterisk Manager Interface (AMI), executes the `core show channels concise` command every second, and outputs detailed information about active channels.
 
