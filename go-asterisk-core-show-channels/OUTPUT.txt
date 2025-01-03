@@ -1,0 +1,35 @@
+
+./asterisk-core-show-channels-aarch64 -host=127.0.0.1 -port=5038 -username=my_user -password=my_password
+Connected: Asterisk Call Manager/7.0.3
+--------------->>
+Channel: SIP/ANTEL-CELU-0000001e
+    Context: demo-incoming
+    Exten:
+    Priority: 1
+    ChannelState: Down
+    Application: AppDial2
+    ApplicationData: (Outgoing Line)
+    CallerIDNum: 1111111122222
+    AccountCode: 3
+    PeerAccount: 3
+    Duration: 0
+    BridgeId: 1735937566.30
+
+    Dump: SIP/ANTEL-CELU-0000001e!demo-incoming!!1!Down!AppDial2!(Outgoing Line)!1111111122222!3!3!3!0!!1735937566.30
+<<---------------
+--------------->>
+Channel: SIP/ANTEL-CELU-0000001e
+    Context: demo-incoming
+    Exten:
+    Priority: 1
+    ChannelState: Down
+    Application: AppDial2
+    ApplicationData: (Outgoing Line)
+    CallerIDNum: 1111111122222
+    AccountCode: 3
+    PeerAccount: 3
+    Duration: 1
+    BridgeId: 1735937566.30
+
+    Dump: SIP/ANTEL-CELU-0000001e!demo-incoming!!1!Down!AppDial2!(Outgoing Line)!1111111122222!3!3!3!1!!1735937566.30
+<<---------------
