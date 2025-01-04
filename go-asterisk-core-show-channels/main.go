@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/ivahaev/amigo"
@@ -51,7 +52,10 @@ func main() {
 
 	// Inicialización y conexión
 	a := amigo.New(settings)
-	a.Connect()
+	var mu sync.Mutex
+
+	// Función para manejar la conexión al AMI
+	connectToAMI(a)
 
 	// Manejadores de eventos
 	a.On("connect", func(message string) {
@@ -61,16 +65,25 @@ func main() {
 		ticker := time.NewTicker(1 * time.Second) // Ejecutar cada 1 segundo
 		go func() {
 			for range ticker.C {
+				mu.Lock()
 				// Enviar la acción "Command" con el comando "core show channels concise"
 				result, err := a.Action(map[string]string{
 					"Action":  "Command",
 					"Command": "core show channels concise",
 				})
+
+				mu.Unlock()
+
 				if err != nil {
 					fmt.Println("Error sending CoreShowChannels:", err)
 				} else {
 					// Extraer el Output
 					output := result["Output"]
+
+					if output == "" {
+						// Descarta si el Output está vacío
+						continue
+					}
 
 					// Verificar si el output contiene el separador "!"
 					if !strings.Contains(output, "!") {
@@ -134,6 +147,7 @@ func main() {
 
 	a.On("error", func(message string) {
 		fmt.Println("Connection error:", message)
+		reconnectAMI(a, &mu) // Intentar reconectar automáticamente
 	})
 
 	// Canal de eventos
@@ -153,4 +167,26 @@ func getEnvOrDefault(envVar, flagValue, defaultValue string) string {
 		return e
 	}
 	return defaultValue
+}
+
+// connectToAMI establece una conexión inicial al AMI
+func connectToAMI(a *amigo.Amigo) {
+	a.Connect() // Llamada sin capturar valor
+	fmt.Println("Attempting to connect to AMI...")
+}
+
+// reconnectAMI intenta reconectar al AMI en caso de error
+func reconnectAMI(a *amigo.Amigo, mu *sync.Mutex) {
+	mu.Lock()
+	defer mu.Unlock()
+	for {
+		time.Sleep(5 * time.Second)
+		fmt.Println("Attempting to reconnect to AMI...")
+		a.Connect() // Llamada sin capturar valor
+		if a.Connected() {
+			fmt.Println("Reconnected successfully")
+			break
+		}
+		fmt.Println("Reconnect failed, retrying...")
+	}
 }
