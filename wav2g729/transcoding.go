@@ -1,4 +1,8 @@
 // transcoding.go
+// Federico Pereira <fpereira@cnsoluciones.com>
+// Uso: ./transcoding input.wav output.g729
+// Lee un WAV mono/8kHz/16-bit PCM y genera bitstream G.729 crudo (1 frame por cada 10 ms).
+// Enlaza dinámicamente contra libbcg729.so (instalada en /usr/local/lib).
 // Uso: ./transcoding input.wav output.g729
 // Lee un WAV mono/8kHz/16-bit PCM y genera bitstream G.729 crudo (1 frame por cada 10 ms).
 // Enlaza dinámicamente contra libbcg729.so (instalada en /usr/local/lib).
@@ -75,7 +79,7 @@ func main() {
 
 func showHelp() {
 	fmt.Printf(`
-🎵 WAV to G.729 Transcoder v1.0.0
+🎵 wav2g729 - WAV to G.729 Transcoder v1.0.0 - Federico Pereira <fpereira@cnsoluciones.com>
 
 DESCRIPTION:
   Converts WAV audio files to G.729 format.
