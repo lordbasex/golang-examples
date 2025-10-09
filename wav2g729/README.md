@@ -317,8 +317,3 @@ This project is part of CNSoluciones, specialized in telecommunications and VoIP
 ---
 
 **Questions or issues?** Open an issue in the repository.
-
-## 🌐 Language versions
-
-- 🇺🇸 [English](README.md) (Current)
-- 🇪🇸 [Español](README.es.md)
