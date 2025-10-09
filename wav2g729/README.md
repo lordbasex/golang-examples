@@ -1,6 +1,4 @@
-# 🎵 wav2g729 - WAV to G.729 Transcoder v1.0.0
-
-Federico Pereira <fpereira@cnsoluciones.com>
+# WAV to G.729 Transcoder
 
 Conversor de audio de formato WAV a G.729 utilizando la librería [bcg729](https://github.com/BelledonneCommunications/bcg729) desde Go mediante CGO.
 
@@ -34,7 +32,25 @@ Este proyecto proporciona una herramienta de línea de comandos que convierte ar
 
 ## 🚀 Uso rápido con Docker
 
-### 1. Construir la imagen
+### 📦 Imagen pública disponible
+
+La imagen está disponible públicamente en Docker Hub como `cnsoluciones/wav2g729:latest`. No necesitas construir la imagen localmente.
+
+### 1. Usar la imagen pública (Recomendado)
+
+```bash
+docker run --rm -v $PWD:/work cnsoluciones/wav2g729:latest input.wav output.g729
+```
+
+**Explicación del comando:**
+- `docker run`: Ejecuta un contenedor desde la imagen
+- `--rm`: Elimina automáticamente el contenedor después de la ejecución
+- `-v $PWD:/work`: Monta el directorio actual en `/work` dentro del contenedor
+- `cnsoluciones/wav2g729:latest`: Imagen pública de Docker Hub
+- `input.wav`: Archivo de entrada (WAV)
+- `output.g729`: Archivo de salida (G.729 raw bitstream)
+
+### 2. Construir la imagen localmente (Opcional)
 
 ```bash
 docker build -t wav2g729:latest .
@@ -46,28 +62,17 @@ Este comando:
 - Compila el programa Go con soporte CGO
 - Crea una imagen optimizada de **~19MB** (Alpine Linux)
 
-### 2. Convertir un archivo WAV
-
-```bash
-docker run --rm -v $PWD:/work wav2g729:latest input.wav output.g729
-```
-
-**Explicación del comando:**
-- `docker run`: Ejecuta un contenedor desde la imagen
-- `--rm`: Elimina automáticamente el contenedor después de la ejecución
-- `-v $PWD:/work`: Monta el directorio actual en `/work` dentro del contenedor
-- `wav2g729:latest`: Nombre de la imagen a utilizar
-- `input.wav`: Archivo de entrada (WAV)
-- `output.g729`: Archivo de salida (G.729 raw bitstream)
-
 ### 3. Obtener ayuda
 
 ```bash
 # Mostrar ayuda completa
-docker run --rm wav2g729:latest --help
+docker run --rm cnsoluciones/wav2g729:latest --help
+
+# Mostrar versión
+docker run --rm cnsoluciones/wav2g729:latest --version
 
 # O simplemente ejecutar sin argumentos
-docker run --rm wav2g729:latest
+docker run --rm cnsoluciones/wav2g729:latest
 ```
 
 El helper incluye (en inglés):
@@ -77,10 +82,10 @@ El helper incluye (en inglés):
 - ✅ Información técnica del codec G.729
 - ✅ Comandos para verificar la conversión
 
-### 3. Ejemplo con ruta completa
+### 4. Ejemplo con ruta completa
 
 ```bash
-docker run --rm -v /ruta/a/tus/archivos:/work wav2g729:latest audio.wav audio.g729
+docker run --rm -v /ruta/a/tus/archivos:/work cnsoluciones/wav2g729:latest audio.wav audio.g729
 ```
 
 ## ✅ Verificar la conversión
@@ -160,8 +165,8 @@ import "C"
 ### 🆘 Sistema de ayuda integrado
 
 El programa incluye un helper completo que se activa cuando:
-- Se ejecuta sin argumentos: `docker run --rm wav2g729:latest`
-- Se solicita ayuda explícita: `docker run --rm wav2g729:latest --help`
+- Se ejecuta sin argumentos: `docker run --rm cnsoluciones/wav2g729:latest`
+- Se solicita ayuda explícita: `docker run --rm cnsoluciones/wav2g729:latest --help`
 
 **Características del helper (en inglés):**
 - 📋 **Descripción completa** del programa y su propósito
@@ -294,7 +299,13 @@ Las contribuciones son bienvenidas. Por favor:
 
 ## 👨‍💻 Autor
 
+**Federico Pereira** <fpereira@cnsoluciones.com>
+
 Proyecto de conversión de audio WAV a G.729 usando Go y CGO.
+
+### 🏢 CNSoluciones
+
+Este proyecto es parte de CNSoluciones, especializada en soluciones de telecomunicaciones y VoIP.
 
 ---
 
