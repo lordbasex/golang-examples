@@ -4,6 +4,10 @@ Federico Pereira <fpereira@cnsoluciones.com>
 
 Audio transcoder from WAV format to G.729 using the [bcg729](https://github.com/BelledonneCommunications/bcg729) library from Go via CGO.
 
+## 🌐 Language versions
+- 🇺🇸 [English](README.md) (Current)
+- 🇪🇸 [Español](README.es.md)
+
 ## 📋 Description
 
 This project provides a command-line tool that converts audio files from WAV (PCM) format to G.729 encoded files. The G.729 codec is widely used in VoIP telephony for its excellent voice quality to compression ratio.
