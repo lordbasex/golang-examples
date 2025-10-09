@@ -53,7 +53,7 @@ docker run --rm -v $PWD:/work cnsoluciones/wav2g729:latest input.wav output.g729
 ### 2. Construir la imagen localmente (Opcional)
 
 ```bash
-docker build -t wav2g729:latest .
+docker build -t cnsoluciones/wav2g729:latest .
 ```
 
 Este comando:
