@@ -316,9 +316,3 @@ Este proyecto es parte de CNSoluciones, especializada en soluciones de telecomun
 ---
 
 **¿Preguntas o problemas?** Abre un issue en el repositorio.
-
-## 🌐 Versiones de idioma
-
-- 🇺🇸 [English](README.md)
-- 🇪🇸 [Español](README.es.md) (Actual)
-
