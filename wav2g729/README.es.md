@@ -4,6 +4,10 @@ Federico Pereira <fpereira@cnsoluciones.com>
 
 Conversor de audio de formato WAV a G.729 utilizando la librería [bcg729](https://github.com/BelledonneCommunications/bcg729) desde Go mediante CGO.
 
+## 🌐 Versiones de idioma
+- 🇺🇸 [English](README.md)
+- 🇪🇸 [Español](README.es.md) (Actual)
+
 ## 📋 Descripción
 
 Este proyecto proporciona una herramienta de línea de comandos que convierte archivos de audio en formato WAV (PCM) a archivos codificados en G.729. El codec G.729 es ampliamente utilizado en telefonía VoIP por su excelente relación entre calidad de voz y compresión.
