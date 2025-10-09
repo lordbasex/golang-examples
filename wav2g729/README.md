@@ -1,150 +1,153 @@
-# WAV to G.729 Transcoder
+# 🎵 wav2g729 - WAV to G.729 Transcoder v1.0.0
 
-Conversor de audio de formato WAV a G.729 utilizando la librería [bcg729](https://github.com/BelledonneCommunications/bcg729) desde Go mediante CGO.
+Federico Pereira <fpereira@cnsoluciones.com>
 
-## 📋 Descripción
+Audio transcoder from WAV format to G.729 using the [bcg729](https://github.com/BelledonneCommunications/bcg729) library from Go via CGO.
 
-Este proyecto proporciona una herramienta de línea de comandos que convierte archivos de audio en formato WAV (PCM) a archivos codificados en G.729. El codec G.729 es ampliamente utilizado en telefonía VoIP por su excelente relación entre calidad de voz y compresión.
+## 📋 Description
 
-### Características
+This project provides a command-line tool that converts audio files from WAV (PCM) format to G.729 encoded files. The G.729 codec is widely used in VoIP telephony for its excellent voice quality to compression ratio.
 
-- ✅ Conversión de WAV (mono, 8kHz, 16-bit PCM) a G.729
-- ✅ Utiliza la librería C `libbcg729` de alta calidad
-- ✅ Implementado en Go con CGO para máximo rendimiento
-- ✅ Dockerizado para facilitar el despliegue
-- ✅ Imagen Docker multi-stage para tamaño optimizado
+### Features
 
-## 🔧 Requisitos
+- ✅ WAV conversion (mono, 8kHz, 16-bit PCM) to G.729
+- ✅ Uses high-quality C `libbcg729` library
+- ✅ Implemented in Go with CGO for maximum performance
+- ✅ Dockerized for easy deployment
+- ✅ Multi-stage Docker image for optimized size
 
-### Para usar con Docker (Recomendado)
-- Docker instalado en tu sistema
-- Archivos WAV con las siguientes especificaciones:
-  - **Formato**: PCM (AudioFormat = 1)
-  - **Canales**: Mono (1 canal)
+## 🔧 Requirements
+
+### For Docker usage (Recommended)
+- Docker installed on your system
+- WAV files with the following specifications:
+  - **Format**: PCM (AudioFormat = 1)
+  - **Channels**: Mono (1 channel)
   - **Sample Rate**: 8000 Hz
-  - **Bits por muestra**: 16-bit
+  - **Bits per sample**: 16-bit
 
-### Para compilación local
-- Go 1.23 o superior
-- CGO habilitado (`CGO_ENABLED=1`)
-- `libbcg729` instalada en el sistema
-- Herramientas de compilación (gcc, cmake, git)
+### For local compilation
+- Go 1.23 or higher
+- CGO enabled (`CGO_ENABLED=1`)
+- `libbcg729` installed on the system
+- Build tools (gcc, cmake, git)
 
-## 🚀 Uso rápido con Docker
+## 🚀 Quick usage with Docker
 
-### 📦 Imagen pública disponible
+### 📦 Public image available
 
-La imagen está disponible públicamente en Docker Hub como `cnsoluciones/wav2g729:latest`. No necesitas construir la imagen localmente.
+The image is publicly available on Docker Hub as `cnsoluciones/wav2g729:latest`. You don't need to build the image locally.
 
-### 1. Usar la imagen pública (Recomendado)
+### 1. Use the public image (Recommended)
 
 ```bash
 docker run --rm -v $PWD:/work cnsoluciones/wav2g729:latest input.wav output.g729
 ```
 
-**Explicación del comando:**
-- `docker run`: Ejecuta un contenedor desde la imagen
-- `--rm`: Elimina automáticamente el contenedor después de la ejecución
-- `-v $PWD:/work`: Monta el directorio actual en `/work` dentro del contenedor
-- `cnsoluciones/wav2g729:latest`: Imagen pública de Docker Hub
-- `input.wav`: Archivo de entrada (WAV)
-- `output.g729`: Archivo de salida (G.729 raw bitstream)
+**Command explanation:**
+- `docker run`: Runs a container from the image
+- `--rm`: Automatically removes the container after execution
+- `-v $PWD:/work`: Mounts the current directory to `/work` inside the container
+- `cnsoluciones/wav2g729:latest`: Public Docker Hub image
+- `input.wav`: Input file (WAV)
+- `output.g729`: Output file (G.729 raw bitstream)
 
-### 2. Construir la imagen localmente (Opcional)
+### 2. Build the image locally (Optional)
 
 ```bash
-docker build -t cnsoluciones/wav2g729:latest .
+docker build -t wav2g729:latest .
 ```
 
-Este comando:
-- Descarga e instala todas las dependencias necesarias
-- Compila la librería `bcg729` desde el código fuente
-- Compila el programa Go con soporte CGO
-- Crea una imagen optimizada de **~19MB** (Alpine Linux)
+This command:
+- Downloads and installs all necessary dependencies
+- Compiles the `bcg729` library from source code
+- Compiles the Go program with CGO support
+- Creates an optimized image of **~19MB** (Alpine Linux)
 
-### 3. Obtener ayuda
+### 3. Get help
 
 ```bash
-# Mostrar ayuda completa
+# Show complete help
 docker run --rm cnsoluciones/wav2g729:latest --help
 
-# Mostrar versión
+# Show version
 docker run --rm cnsoluciones/wav2g729:latest --version
 
-# O simplemente ejecutar sin argumentos
+# Or simply run without arguments
 docker run --rm cnsoluciones/wav2g729:latest
 ```
 
-El helper incluye (en inglés):
-- ✅ Descripción del programa y requisitos
-- ✅ Ejemplos de uso con Docker
-- ✅ Comandos FFmpeg para conversión de archivos incompatibles
-- ✅ Información técnica del codec G.729
-- ✅ Comandos para verificar la conversión
+The helper includes (in English):
+- ✅ Program description and requirements
+- ✅ Docker usage examples
+- ✅ FFmpeg commands for incompatible file conversion
+- ✅ Technical information about G.729 codec
+- ✅ Commands to verify conversion
 
-### 4. Ejemplo con ruta completa
+### 4. Example with full path
 
 ```bash
-docker run --rm -v /ruta/a/tus/archivos:/work cnsoluciones/wav2g729:latest audio.wav audio.g729
+docker run --rm -v /path/to/your/files:/work cnsoluciones/wav2g729:latest audio.wav audio.g729
 ```
 
-## ✅ Verificar la conversión
+## ✅ Verify conversion
 
-Para validar que el archivo `.g729` se creó correctamente, puedes convertirlo de vuelta a WAV con FFmpeg:
+To validate that the `.g729` file was created correctly, you can convert it back to WAV with FFmpeg:
 
 ```bash
 ffmpeg -f g729 -i output.g729 -ar 8000 -ac 1 -c:a pcm_s16le output.wav
 ```
 
-**Explicación del comando:**
-- `-f g729`: Especifica el formato de entrada como G.729 raw bitstream
-- `-i output.g729`: Archivo de entrada (el G.729 generado)
-- `-ar 8000`: Frecuencia de muestreo de salida (8000 Hz)
-- `-ac 1`: Número de canales de salida (1 = mono)
-- `-c:a pcm_s16le`: Codec de audio de salida (PCM 16-bit little-endian)
-- `output.wav`: Archivo WAV resultante
+**Command explanation:**
+- `-f g729`: Specifies input format as G.729 raw bitstream
+- `-i output.g729`: Input file (the generated G.729)
+- `-ar 8000`: Output sample rate (8000 Hz)
+- `-ac 1`: Number of output channels (1 = mono)
+- `-c:a pcm_s16le`: Output audio codec (PCM 16-bit little-endian)
+- `output.wav`: Resulting WAV file
 
-Ahora puedes reproducir `output.wav` con cualquier reproductor de audio para verificar la calidad de la conversión. Si escuchas el audio correctamente, ¡la conversión fue exitosa! 🎵
+Now you can play `output.wav` with any audio player to verify the conversion quality. If you hear the audio correctly, the conversion was successful! 🎵
 
-## 📁 Estructura del proyecto
+## 📁 Project structure
 
 ```
 .
-├── Dockerfile           # Definición de la imagen Docker multi-stage
-├── go.mod              # Dependencias del proyecto Go
-├── go.sum              # Checksums de las dependencias
-├── transcoding.go      # Código principal del conversor
-└── README.md           # Este archivo
+├── Dockerfile           # Multi-stage Docker image definition
+├── go.mod              # Go project dependencies
+├── go.sum              # Dependency checksums
+├── transcoding.go      # Main transcoder code
+├── README.md           # This file (English)
+└── README.es.md        # Spanish documentation
 ```
 
-## 🏗️ Arquitectura técnica
+## 🏗️ Technical architecture
 
-### Dockerfile Multi-stage optimizado
+### Optimized Multi-stage Dockerfile
 
-El proyecto utiliza un Dockerfile de dos etapas optimizado con **Alpine Linux**:
+The project uses a two-stage Dockerfile optimized with **Alpine Linux**:
 
-1. **Stage 1 (build)**: Imagen basada en `golang:1.23-alpine`
-   - Instala herramientas de compilación (build-base, cmake, git)
-   - Clona y compila `bcg729` como librería compartida (`libbcg729.so`)
-   - Descarga dependencias Go
-   - Compila el binario con CGO habilitado
+1. **Stage 1 (build)**: Image based on `golang:1.23-alpine`
+   - Installs build tools (build-base, cmake, git)
+   - Clones and compiles `bcg729` as shared library (`libbcg729.so`)
+   - Downloads Go dependencies
+   - Compiles binary with CGO enabled
 
-2. **Stage 2 (runtime)**: Imagen basada en `alpine:latest`
-   - Solo contiene el binario compilado y librerías necesarias
-   - Copia la librería `libbcg729.so` y dependencias mínimas
-   - **Resultado: imagen ultra-ligera de ~19MB** 🚀
+2. **Stage 2 (runtime)**: Image based on `alpine:latest`
+   - Contains only the compiled binary and necessary libraries
+   - Copies `libbcg729.so` and minimal dependencies
+   - **Result: ultra-light image of ~19MB** 🚀
 
-### 🎯 Optimizaciones implementadas:
+### 🎯 Implemented optimizations:
 
-- ✅ **Alpine Linux**: Base mínima (~3MB) vs Debian (~80MB)
-- ✅ **Librería compartida**: `libbcg729.so` en lugar de estática
-- ✅ **Dependencias mínimas**: Solo `ca-certificates` y `libc6-compat`
-- ✅ **Multi-stage build**: Compilación separada del runtime
-- ✅ **Sin herramientas de desarrollo**: Solo lo necesario para ejecutar
+- ✅ **Alpine Linux**: Minimal base (~3MB) vs Debian (~80MB)
+- ✅ **Shared library**: `libbcg729.so` instead of static
+- ✅ **Minimal dependencies**: Only `ca-certificates` and `libc6-compat`
+- ✅ **Multi-stage build**: Separate compilation from runtime
+- ✅ **No development tools**: Only what's necessary to run
 
-### Código Go con CGO
+### Go code with CGO
 
-El programa utiliza CGO para llamar funciones C de `libbcg729`:
+The program uses CGO to call C functions from `libbcg729`:
 
 ```go
 /*
@@ -155,31 +158,31 @@ El programa utiliza CGO para llamar funciones C de `libbcg729`:
 import "C"
 ```
 
-**Proceso de conversión:**
-1. Lee el archivo WAV usando `github.com/youpy/go-wav`
-2. Valida el formato (mono, 8kHz, 16-bit PCM)
-3. Procesa el audio en frames de 80 muestras (10ms @ 8kHz)
-4. Codifica cada frame con `bcg729Encoder`
-5. Escribe el bitstream G.729 al archivo de salida
+**Conversion process:**
+1. Reads WAV file using `github.com/youpy/go-wav`
+2. Validates format (mono, 8kHz, 16-bit PCM)
+3. Processes audio in frames of 80 samples (10ms @ 8kHz)
+4. Encodes each frame with `bcg729Encoder`
+5. Writes G.729 bitstream to output file
 
-### 🆘 Sistema de ayuda integrado
+### 🆘 Integrated help system
 
-El programa incluye un helper completo que se activa cuando:
-- Se ejecuta sin argumentos: `docker run --rm cnsoluciones/wav2g729:latest`
-- Se solicita ayuda explícita: `docker run --rm cnsoluciones/wav2g729:latest --help`
+The program includes a complete helper that activates when:
+- Run without arguments: `docker run --rm cnsoluciones/wav2g729:latest`
+- Explicit help request: `docker run --rm cnsoluciones/wav2g729:latest --help`
 
-**Características del helper (en inglés):**
-- 📋 **Descripción completa** del programa y su propósito
-- 📝 **Requisitos técnicos** del archivo WAV de entrada
-- 💡 **Ejemplos prácticos** de uso con Docker
-- 🔧 **Comandos FFmpeg** para convertir archivos incompatibles
-- ✅ **Comandos de verificación** para validar la conversión
-- 📊 **Información técnica** del codec G.729
-- 🔗 **Enlaces a documentación** adicional
+**Helper features (in English):**
+- 📋 **Complete description** of the program and its purpose
+- 📝 **Technical requirements** for input WAV file
+- 💡 **Practical examples** of Docker usage
+- 🔧 **FFmpeg commands** to convert incompatible files
+- ✅ **Verification commands** to validate conversion
+- 📊 **Technical information** about G.729 codec
+- 🔗 **Additional documentation** links
 
-## 🔍 Validación del formato WAV
+## 🔍 WAV format validation
 
-El programa valida automáticamente que el archivo WAV cumpla con los requisitos:
+The program automatically validates that the WAV file meets the requirements:
 
 ```
 ✅ AudioFormat = 1 (PCM)
@@ -188,18 +191,18 @@ El programa valida automáticamente que el archivo WAV cumpla con los requisitos
 ✅ BitsPerSample = 16
 ```
 
-Si tu archivo no cumple estos requisitos, puedes convertirlo con FFmpeg:
+If your file doesn't meet these requirements, you can convert it with FFmpeg:
 
 ```bash
-# Convertir cualquier archivo de audio a formato compatible
-ffmpeg -i entrada.mp3 -ar 8000 -ac 1 -sample_fmt s16 salida.wav
+# Convert any audio file to compatible format
+ffmpeg -i input.mp3 -ar 8000 -ac 1 -sample_fmt s16 -acodec pcm_s16le output.wav
 ```
 
-## 🛠️ Compilación local (sin Docker)
+## 🛠️ Local compilation (without Docker)
 
-Si prefieres compilar localmente sin Docker:
+If you prefer to compile locally without Docker:
 
-### 1. Instalar bcg729
+### 1. Install bcg729
 
 ```bash
 git clone https://github.com/BelledonneCommunications/bcg729
@@ -209,105 +212,109 @@ cmake --build build --target install
 sudo ldconfig
 ```
 
-### 2. Compilar el programa
+### 2. Compile the program
 
 ```bash
 export CGO_ENABLED=1
 go build -o transcoding transcoding.go
 ```
 
-### 3. Ejecutar
+### 3. Run
 
 ```bash
 ./transcoding input.wav output.g729
 ```
 
-## 📊 Detalles técnicos del codec G.729
+## 📊 G.729 codec technical details
 
-- **Bitrate**: ~8 kbps (muy eficiente)
-- **Frame size**: 10ms (80 muestras @ 8kHz)
-- **Frame encoding**: ~10 bytes por frame de voz
-- **Uso**: VoIP, telefonía IP, videoconferencia
-- **Ventaja**: Excelente calidad de voz con mínimo ancho de banda
+- **Bitrate**: ~8 kbps (very efficient)
+- **Frame size**: 10ms (80 samples @ 8kHz)
+- **Frame encoding**: ~10 bytes per voice frame
+- **Usage**: VoIP, IP telephony, videoconferencing
+- **Advantage**: Excellent voice quality with minimal bandwidth
 
 ### VAD (Voice Activity Detection)
 
-El encoder está configurado con VAD deshabilitado (`enableVAD = 0`):
-- **VAD = 0**: Todos los frames se codifican como voz (más simple)
-- **VAD = 1**: Detecta silencios y los codifica eficientemente (ahorra bandwidth)
+The encoder is configured with VAD disabled (`enableVAD = 0`):
+- **VAD = 0**: All frames are encoded as voice (simpler)
+- **VAD = 1**: Detects silence and encodes it efficiently (saves bandwidth)
 
-Puedes modificar esta configuración en `transcoding.go` línea 19.
+You can modify this configuration in `transcoding.go` line 19.
 
-## 🐛 Solución de problemas
+## 🐛 Troubleshooting
 
-### Error: "WAV no PCM"
-Tu archivo está en formato comprimido. Conviértelo con FFmpeg:
+### Error: "WAV is not PCM"
+Your file is in compressed format. Convert it with FFmpeg:
 ```bash
-ffmpeg -i archivo.wav -acodec pcm_s16le salida.wav
+ffmpeg -i file.wav -acodec pcm_s16le output.wav
 ```
 
-### Error: "se requiere mono (1 canal)"
-Tu archivo es estéreo. Conviértelo a mono:
+### Error: "mono required (1 channel)"
+Your file is stereo. Convert to mono:
 ```bash
-ffmpeg -i archivo.wav -ac 1 salida.wav
+ffmpeg -i file.wav -ac 1 output.wav
 ```
 
-### Error: "se requiere 8000 Hz"
-Cambia la frecuencia de muestreo:
+### Error: "8000 Hz required"
+Change the sample rate:
 ```bash
-ffmpeg -i archivo.wav -ar 8000 salida.wav
+ffmpeg -i file.wav -ar 8000 output.wav
 ```
 
-### Error: "se requiere 16-bit PCM"
-Ajusta el formato de muestra:
+### Error: "16-bit PCM required"
+Adjust the sample format:
 ```bash
-ffmpeg -i archivo.wav -sample_fmt s16 salida.wav
+ffmpeg -i file.wav -sample_fmt s16 output.wav
 ```
 
-### Conversión todo-en-uno con FFmpeg
+### All-in-one conversion with FFmpeg
 ```bash
-ffmpeg -i entrada.mp3 -ar 8000 -ac 1 -sample_fmt s16 -acodec pcm_s16le salida.wav
+ffmpeg -i input.mp3 -ar 8000 -ac 1 -sample_fmt s16 -acodec pcm_s16le output.wav
 ```
 
-## 📝 Notas importantes
+## 📝 Important notes
 
-- ⚠️ El archivo de salida `.g729` es un **raw bitstream** sin contenedor
-- ⚠️ Para reproducir archivos G.729, necesitas un reproductor compatible o convertirlos de vuelta a WAV
-- 💡 **Tip**: Usa `ffmpeg -f g729 -i output.g729 -ar 8000 -ac 1 -c:a pcm_s16le output.wav` para convertir G.729 a WAV
-- ⚠️ Algunos codecs G.729 están sujetos a patentes (verifica en tu jurisdicción)
-- ⚠️ `bcg729` es una implementación de código abierto y libre de regalías
+- ⚠️ The output `.g729` file is a **raw bitstream** without container
+- ⚠️ To play G.729 files, you need a compatible player or convert them back to WAV
+- 💡 **Tip**: Use `ffmpeg -f g729 -i output.g729 -ar 8000 -ac 1 -c:a pcm_s16le output.wav` to convert G.729 to WAV
+- ⚠️ Some G.729 codecs are subject to patents (check in your jurisdiction)
+- ⚠️ `bcg729` is an open-source and royalty-free implementation
 
-## 📚 Referencias
+## 📚 References
 
-- [bcg729 - Biblioteca codec G.729](https://github.com/BelledonneCommunications/bcg729)
-- [go-wav - Parser WAV para Go](https://github.com/youpy/go-wav)
+- [bcg729 - G.729 codec library](https://github.com/BelledonneCommunications/bcg729)
+- [go-wav - WAV parser for Go](https://github.com/youpy/go-wav)
 - [ITU-T G.729 Specification](https://www.itu.int/rec/T-REC-G.729)
 - [CGO Documentation](https://pkg.go.dev/cmd/cgo)
 
-## 📄 Licencia
+## 📄 License
 
-Este proyecto utiliza `bcg729` que está bajo licencia BSD-like. Verifica los términos de licencia antes de usar en producción.
+This project uses `bcg729` which is under BSD-like license. Check license terms before using in production.
 
-## 🤝 Contribuciones
+## 🤝 Contributing
 
-Las contribuciones son bienvenidas. Por favor:
-1. Haz fork del repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+Contributions are welcome. Please:
+1. Fork the repository
+2. Create a branch for your feature (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## 👨‍💻 Autor
+## 👨‍💻 Author
 
 **Federico Pereira** <fpereira@cnsoluciones.com>
 
-Proyecto de conversión de audio WAV a G.729 usando Go y CGO.
+WAV to G.729 audio conversion project using Go and CGO.
 
 ### 🏢 CNSoluciones
 
-Este proyecto es parte de CNSoluciones, especializada en soluciones de telecomunicaciones y VoIP.
+This project is part of CNSoluciones, specialized in telecommunications and VoIP solutions.
 
 ---
 
-**¿Preguntas o problemas?** Abre un issue en el repositorio.
+**Questions or issues?** Open an issue in the repository.
 
+## 🌐 Language versions
+
+- 🇺🇸 [English](README.md) (Current)
+- 🇪🇸 [Español](README.es.md)
