@@ -1,4 +1,4 @@
-# WAV to G.729 Transcoder
+# 🎵 wav2g729 - WAV to G.729 Transcoder v1.0.0 - Federico Pereira <fpereira@cnsoluciones.com>
 
 Conversor de audio de formato WAV a G.729 utilizando la librería [bcg729](https://github.com/BelledonneCommunications/bcg729) desde Go mediante CGO.
 
