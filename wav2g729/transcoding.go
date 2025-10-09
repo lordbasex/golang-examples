@@ -115,7 +115,7 @@ FEATURES:
   • Optimized Docker image (~19MB with Alpine)
 
 MORE INFORMATION:
-  GitHub: https://github.com/lordbasex/golang-examples/wav2g729
+  GitHub: https://github.com/lordbasex/golang-examples/tree/main/wav2g729
   Documentation: See README.md
 
 `, os.Args[0], os.Args[0])
