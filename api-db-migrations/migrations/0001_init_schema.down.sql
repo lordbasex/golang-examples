@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS campaign_members;
+DROP TABLE IF EXISTS campaigns;
+DROP TABLE IF EXISTS users;

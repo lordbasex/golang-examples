@@ -1,0 +1,38 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: api
+      MYSQL_USER: api
+      MYSQL_PASSWORD: api
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    # volumes:
+    #   - mysql_data:/var/lib/mysql
+    networks:
+      - backend
+
+  api:
+    build: .
+    environment:
+      MYSQL_DSN: "api:api@tcp(mysql:3306)/api?multiStatements=true&parseTime=true"
+      MIGRATIONS_PATH: "file://migrations"
+      HTTP_ADDR: ":8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
+volumes:
+  mysql_data:
+
+networks:
+  backend:
+    driver: bridge
