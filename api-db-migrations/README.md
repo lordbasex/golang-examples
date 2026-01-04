@@ -22,12 +22,12 @@ Este proyecto es un **ejemplo completo de API REST** que implementa:
 
 | Tecnología | Versión | Uso |
 |------------|---------|-----|
-| **Go** | 1.22 | Lenguaje principal |
+| **Go** | v1.22 | Lenguaje principal |
 | **Fiber** | v2.52.0 | Framework web (ultra rápido) |
-| **MySQL** | 8.4 | Base de datos |
+| **MySQL** | v8.4 | Base de datos |
 | **golang-migrate** | v4.17.1 | Migraciones versionadas |
-| **Docker** | - | Contenedorización |
-| **Docker Compose** | - | Orquestación |
+| **Docker** | v28.5.1 | Contenedorización |
+| **Docker Compose** | v2.40.0-desktop.1 | Orquestación |
 
 ---
 
