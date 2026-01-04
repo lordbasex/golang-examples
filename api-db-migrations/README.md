@@ -79,7 +79,7 @@ api-db-migrations/
 ### Prerrequisitos
 
 - **Docker** y **Docker Compose** instalados
-- Puertos **8080** (API) y **3307** (MySQL) disponibles
+- Puertos **8080** (API)
 
 ### 1. Iniciar los Servicios
 
