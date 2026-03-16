@@ -1,0 +1,26 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import TopBar from "../components/organisms/TopBar.astro";
+import SideMenu from "../components/organisms/SideMenu.astro";
+import UserForm from "../components/molecules/UserForm.astro";
+import UserList from "../components/organisms/UserList.astro";
+import UserModal from "../components/organisms/UserModal.astro";
+import DeleteModal from "../components/organisms/DeleteModal.astro";
+---
+<BaseLayout title="Astro Go WASM Users CRUD">
+  <div class="dashboard-shell">
+    <TopBar />
+    <main class="dashboard-main">
+      <SideMenu />
+      <section class="dashboard-content">
+        <UserList />
+      </section>
+    </main>
+    <footer class="app-footer">
+      <span>creador Federico Pereira de fpereira@cnsoluciones.com</span>
+    </footer>
+    <UserForm />
+    <UserModal />
+    <DeleteModal />
+  </div>
+</BaseLayout>

@@ -1,0 +1,17 @@
+---
+import Button from "../atoms/Button.astro";
+---
+<header class="app-header">
+  <div class="app-brand">
+    <button id="menuToggleBtn" type="button" class="btn btn--ghost btn--icon app-header__menu" aria-label="Open menu" title="Menu">☰</button>
+    <div class="app-brand__logo">WU</div>
+    <div>
+      <h1>WASM Users</h1>
+      <p>Administration panel</p>
+    </div>
+  </div>
+
+  <div class="app-header__actions">
+    <Button id="themeToggle">Theme</Button>
+  </div>
+</header>

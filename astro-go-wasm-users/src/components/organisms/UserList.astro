@@ -1,0 +1,34 @@
+---
+import Button from "../atoms/Button.astro";
+---
+<section class="content-card">
+  <div class="content-card__header">
+    <div>
+      <h3>Users</h3>
+      <p>Datatable list with row actions.</p>
+    </div>
+    <Button id="newFromListBtn" variant="primary">➕ New</Button>
+  </div>
+
+  <div class="table-toolbar">
+    <input id="searchInput" class="input" placeholder="Search by name, email, company..." />
+    <Button id="refreshBtn">Refresh</Button>
+  </div>
+
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Company</th>
+          <th>Updated</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="usersList"></tbody>
+    </table>
+  </div>
+</section>

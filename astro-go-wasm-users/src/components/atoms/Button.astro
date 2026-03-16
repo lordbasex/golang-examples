@@ -1,0 +1,12 @@
+---
+const { id, variant = 'ghost', type = 'button', className = '', dataAction = null, dataId = null } = Astro.props;
+---
+<button
+  id={id}
+  type={type}
+  class={`btn btn--${variant} ${className}`}
+  data-action={dataAction}
+  data-id={dataId}
+>
+  <slot />
+</button>

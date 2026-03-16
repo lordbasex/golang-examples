@@ -1,0 +1,27 @@
+---
+import Button from "../atoms/Button.astro";
+---
+<section class="panel panel--hero">
+  <div class="hero">
+    <div>
+      <span class="badge">Atomic Design</span>
+      <h2>CRUD local con API en Go WASM</h2>
+      <p>
+        Validación en frontend y backend, errores JSON por campo, cifrado opcional y modo dark/light.
+      </p>
+    </div>
+
+    <div class="hero__card">
+      <label class="field">
+        <span class="field__label">Passphrase de cifrado</span>
+        <div class="field__inline">
+          <input id="passphrase" type="password" placeholder="Ingresá tu clave..." />
+          <Button id="unlockBtn" variant="primary">Activar</Button>
+        </div>
+        <small class="field__help">
+          Se usa para cifrar y descifrar datos guardados en IndexedDB.
+        </small>
+      </label>
+    </div>
+  </div>
+</section>

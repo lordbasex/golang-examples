@@ -1,0 +1,41 @@
+---
+import Button from "../atoms/Button.astro";
+import InputField from "../atoms/InputField.astro";
+---
+<div id="formModal" class="modal is-hidden">
+  <div class="modal__backdrop" data-close-form-modal="true"></div>
+  <div class="modal__content modal__content--wide">
+    <div class="modal__header">
+      <div>
+        <h3 id="formTitle">Create user</h3>
+        <p>Create and edit users with field validation.</p>
+      </div>
+      <Button id="closeFormModalBtn">Close</Button>
+    </div>
+
+    <form id="userForm" class="form" novalidate autocomplete="off">
+      <input type="hidden" id="userId" />
+
+      <div class="form__grid">
+        <InputField id="firstName" label="First name" required={true} />
+        <InputField id="lastName" label="Last name" required={true} />
+        <InputField id="email" label="Email" type="email" required={true} />
+        <InputField id="phone" label="Phone" />
+        <InputField id="document" label="Document" />
+        <InputField id="company" label="Company" />
+        <InputField id="role" label="Role" />
+        <InputField id="address" label="Address" />
+        <InputField id="city" label="City" />
+        <InputField id="state" label="State / Province" />
+        <InputField id="zipCode" label="Zip code" />
+        <InputField id="country" label="Country" />
+      </div>
+
+      <InputField id="notes" label="Notes" textarea={true} rows={4} />
+
+      <div class="form__actions">
+        <Button type="submit" variant="primary">Save</Button>
+      </div>
+    </form>
+  </div>
+</div>

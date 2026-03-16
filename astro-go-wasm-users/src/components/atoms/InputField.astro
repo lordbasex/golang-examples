@@ -1,0 +1,21 @@
+---
+const {
+  id,
+  label,
+  type = 'text',
+  required = false,
+  placeholder = '',
+  autocomplete = 'off',
+  textarea = false,
+  rows = 4
+} = Astro.props;
+---
+<label class="field">
+  <span class="field__label">{label}</span>
+  {textarea ? (
+    <textarea id={id} name={id} rows={rows} placeholder={placeholder} autocomplete={autocomplete}></textarea>
+  ) : (
+    <input id={id} name={id} type={type} placeholder={placeholder} required={required} autocomplete={autocomplete} />
+  )}
+  <small class="field__error" data-error={id}></small>
+</label>
