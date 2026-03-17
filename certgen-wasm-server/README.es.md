@@ -4,8 +4,6 @@
 
 Genera certificados TLS internos directamente en el navegador usando **Astro + Go WASM + Service Worker**.
 
-> Se eliminó el prototipo. Este repositorio ahora contiene solo la implementación WASM.
-
 ## Qué hace este proyecto
 
 El formulario web solicita:
