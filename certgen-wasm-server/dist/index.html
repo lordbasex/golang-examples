@@ -1,0 +1,301 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="dark light"><title>WASM CertGen</title><link rel="icon" href="/favicon.ico" sizes="any"><link rel="stylesheet" href="/styles/global.css"><link rel="stylesheet" href="/_astro/index.BlscG7Fi.css"></head> <body>  <div class="container" data-astro-cid-j7pv25f6> <div class="panel" style="margin-bottom: 18px;" data-astro-cid-j7pv25f6> <div class="panelHeader" data-astro-cid-j7pv25f6> <div class="toolbar" data-astro-cid-j7pv25f6> <label for="langSelect" data-i18n="lang.label" data-astro-cid-j7pv25f6>Language</label> <select id="langSelect" aria-label="Language selector" data-astro-cid-j7pv25f6> <option value="en" data-astro-cid-j7pv25f6>EN</option> <option value="es" data-astro-cid-j7pv25f6>ES</option> <option value="pt" data-astro-cid-j7pv25f6>PT</option> </select> </div> <div class="kicker" data-astro-cid-j7pv25f6>Astro + Go WASM + Service Worker</div> <h1 class="title" data-i18n="hero.title" data-astro-cid-j7pv25f6>CertGen (offline) - generate your CA + server cert</h1> <p class="hint" data-astro-cid-j7pv25f6> <span data-i18n="hero.hint.before1" data-astro-cid-j7pv25f6>Fill</span> <code class="inline" data-astro-cid-j7pv25f6>domain</code>, <code class="inline" data-astro-cid-j7pv25f6>ip</code> <span data-i18n="hero.hint.before2" data-astro-cid-j7pv25f6>and</span> <code class="inline" data-astro-cid-j7pv25f6>org</code>.
+<span data-i18n="hero.hint.after1" data-astro-cid-j7pv25f6>Then download a</span> <code class="inline" data-astro-cid-j7pv25f6>certs.zip</code> <span data-i18n="hero.hint.after2" data-astro-cid-j7pv25f6>with</span> <code class="inline" data-astro-cid-j7pv25f6>certs/</code>.
+</p> </div> <div class="panelBody" data-astro-cid-j7pv25f6> <div class="grid" data-astro-cid-j7pv25f6> <section class="panel" data-astro-cid-j7pv25f6> <div class="panelHeader" data-astro-cid-j7pv25f6> <div class="kicker" data-i18n="form.kicker" data-astro-cid-j7pv25f6>Form</div> <h2 class="title" style="font-size: 1.25rem;" data-i18n="form.title" data-astro-cid-j7pv25f6>Certificate data</h2> <p class="hint" data-i18n="form.subtitle" data-astro-cid-j7pv25f6>
+Validation runs in browser and in WASM backend to avoid generation errors.
+</p> </div> <div class="panelBody" data-astro-cid-j7pv25f6> <form id="certForm" class="form" data-astro-cid-cyrt57q4> <div class="row" data-astro-cid-cyrt57q4> <div class="field" data-astro-cid-ljxi5lh6> <label class="label" for="domain" data-i18n="field.domain" data-astro-cid-ljxi5lh6> Domain<span class="req" data-astro-cid-ljxi5lh6>*</span> </label> <input class="input" id="domain" name="domain" type="text" placeholder="pbx.local" value required autocapitalize="none" autocomplete="off" data-astro-cid-ljxi5lh6> <p class="help" data-i18n="field.domain.help" data-astro-cid-ljxi5lh6>DNS name used by the browser (must match exactly).</p>  </div>  <div class="field" data-astro-cid-ljxi5lh6> <label class="label" for="ip" data-i18n="field.ip" data-astro-cid-ljxi5lh6> IP<span class="req" data-astro-cid-ljxi5lh6>*</span> </label> <input class="input" id="ip" name="ip" type="text" placeholder="192.168.1.10" value required inputmode="decimal" autocapitalize="none" autocomplete="off" data-astro-cid-ljxi5lh6> <p class="help" data-i18n="field.ip.help" data-astro-cid-ljxi5lh6>Server IP address (added to SAN).</p>  </div>  </div> <div class="field" data-astro-cid-ljxi5lh6> <label class="label" for="org" data-i18n="field.org" data-astro-cid-ljxi5lh6> Org<span class="req" data-astro-cid-ljxi5lh6>*</span> </label> <input class="input" id="org" name="org" type="text" placeholder="My Company" value required autocapitalize="words" autocomplete="off" data-astro-cid-ljxi5lh6> <p class="help" data-i18n="field.org.help" data-astro-cid-ljxi5lh6>Organization name written inside the certificate.</p>  </div>  <div class="actions" data-astro-cid-cyrt57q4> <button class="btn primary" type="submit" data-astro-cid-3pspvxuc> <span data-i18n="button.generate" data-astro-cid-cyrt57q4>Generate & Download ZIP</span> </button>  </div> <div id="formAlert" class="alert" hidden data-astro-cid-cyrt57q4></div> </form> <script>
+  // This script runs in the browser (Astro outputs static HTML).
+  // We validate on the client for fast UX, then validate again in WASM (authoritative).
+  const form = document.getElementById("certForm");
+  const alertBox = document.getElementById("formAlert");
+
+  const fields = {
+    domain: document.getElementById("domain"),
+    ip: document.getElementById("ip"),
+    org: document.getElementById("org"),
+  };
+
+  function t(key, vars) {
+    if (window.I18N && typeof window.I18N.t === "function") {
+      return window.I18N.t(key, vars);
+    }
+    return key;
+  }
+
+  function setAlert(kind, msg) {
+    alertBox.hidden = !msg;
+    alertBox.dataset.kind = kind || "info";
+    alertBox.textContent = msg || "";
+    if (msg) console.log("[ui] alert", { kind: kind || "info", msg });
+  }
+
+  function setFieldError(inputEl, msg) {
+    // InputField renders the error via CSS class; we keep it simple in JS:
+    // - red border via class
+    // - show message in alert (and field's native validity text)
+    if (msg) {
+      inputEl.classList.add("isError");
+      inputEl.setCustomValidity(msg);
+    } else {
+      inputEl.classList.remove("isError");
+      inputEl.setCustomValidity("");
+    }
+  }
+
+  function isValidDomain(value) {
+    // Simple beginner-friendly check (UI only). Backend is authoritative.
+    // Accepts "pbx.local" and typical hostnames.
+    if (!value) return false;
+    if (value.includes(" ")) return false;
+    if (!value.includes(".")) return false;
+    if (value.startsWith(".") || value.endsWith(".")) return false;
+    return true;
+  }
+
+  function isValidIP(value) {
+    // IPv4-only UI check (backend accepts full net.ParseIP).
+    const m = value.match(/^(\d{1,3})(\.\d{1,3}){3}$/);
+    if (!m) return false;
+    return value.split(".").every((x) => {
+      const n = Number(x);
+      return Number.isInteger(n) && n >= 0 && n <= 255;
+    });
+  }
+
+  function validateClient() {
+    const domain = fields.domain.value.trim();
+    const ip = fields.ip.value.trim();
+    const org = fields.org.value.trim();
+
+    let ok = true;
+    setAlert("", "");
+
+    if (!isValidDomain(domain)) {
+      setFieldError(fields.domain, t("err.invalidDomain"));
+      ok = false;
+    } else {
+      setFieldError(fields.domain, "");
+    }
+
+    if (!isValidIP(ip)) {
+      setFieldError(fields.ip, t("err.invalidIP"));
+      ok = false;
+    } else {
+      setFieldError(fields.ip, "");
+    }
+
+    if (!org) {
+      setFieldError(fields.org, t("err.orgRequired"));
+      ok = false;
+    } else if (org.length > 128) {
+      setFieldError(fields.org, t("err.orgTooLong"));
+      ok = false;
+    } else {
+      setFieldError(fields.org, "");
+    }
+
+    console.log("[ui] validateClient", { ok, domain, ip, org });
+    return ok;
+  }
+
+  async function downloadZip(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function pad2(value) {
+    return String(value).padStart(2, "0");
+  }
+
+  function sanitizeFilenamePart(value) {
+    // Keep dots and dashes for readability, replace unsafe filename chars.
+    return value.replace(/[\\/:*?"<>|]/g, "_");
+  }
+
+  function buildZipFilename(domain) {
+    // Format: domain-YYYYMMDD-HHMMSS.zip
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = pad2(now.getMonth() + 1);
+    const dd = pad2(now.getDate());
+    const hh = pad2(now.getHours());
+    const mi = pad2(now.getMinutes());
+    const ss = pad2(now.getSeconds());
+    const safeDomain = sanitizeFilenamePart(domain || "certs");
+    return `${safeDomain}-${yyyy}${mm}${dd}-${hh}${mi}${ss}.zip`;
+  }
+
+  async function ensureWasmRouteReady() {
+    // Service Worker is mandatory in this architecture because /api/*
+    // is handled by WASM inside the SW, not by the static Python server.
+    if (!("serviceWorker" in navigator)) {
+      throw new Error("service_worker_not_supported");
+    }
+
+    const registration = await navigator.serviceWorker.ready;
+    console.log("[ui] sw ready", registration.scope);
+
+    // Wait a short time for control on first load.
+    if (!navigator.serviceWorker.controller) {
+      console.log("[ui] waiting for service worker controller...");
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    if (!navigator.serviceWorker.controller) {
+      throw new Error("service_worker_not_controlling_page");
+    }
+
+    // Optional debug checks to make missing artifacts obvious.
+    const swRes = await fetch("/sw.js", { method: "GET", cache: "no-store" });
+    const wasmRes = await fetch("/server.wasm", { method: "HEAD", cache: "no-store" });
+    console.log("[ui] artifact checks", { sw: swRes.status, wasm: wasmRes.status });
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    console.log("[ui] submit");
+    if (!validateClient()) {
+      setAlert("error", t("alert.checkFields"));
+      return;
+    }
+
+    setAlert("info", t("alert.generating"));
+
+    const payload = {
+      domain: fields.domain.value.trim(),
+      ip: fields.ip.value.trim(),
+      org: fields.org.value.trim(),
+    };
+
+    console.log("[ui] request payload", payload);
+    try {
+      await ensureWasmRouteReady();
+
+      const res = await fetch("/api/certgen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const contentType = res.headers.get("content-type") || "";
+      console.log("[ui] response", { ok: res.ok, status: res.status, contentType });
+      if (!res.ok) {
+        if (contentType.includes("application/json")) {
+          const data = await res.json();
+          console.log("[ui] error json", data);
+          if (data && data.message === "validation_failed" && data.errors) {
+            setAlert("error", t("alert.validationFailed"));
+            for (const k of ["domain", "ip", "org"]) {
+              if (data.errors[k]) setFieldError(fields[k], data.errors[k]);
+            }
+          } else {
+            setAlert("error", "Error: " + (data?.message || "unknown_error"));
+          }
+        } else {
+          setAlert("error", t("alert.zipError"));
+        }
+        return;
+      }
+
+      const blob = await res.blob();
+      console.log("[ui] zip received", { bytes: blob.size, type: blob.type || "unknown" });
+      const filename = buildZipFilename(payload.domain);
+      await downloadZip(blob, filename);
+      setAlert("ok", t("alert.downloaded", { filename }));
+    } catch (err) {
+      console.log("[ui] network error", err);
+      setAlert("error", t("alert.swNotReady"));
+    }
+  });
+</script>  </div> </section> <aside class="panel" data-astro-cid-j7pv25f6> <div class="panelHeader" data-astro-cid-j7pv25f6> <p class="projectLinks" data-astro-cid-j7pv25f6> <a href="https://www.asterisk.org/" target="_blank" rel="noopener noreferrer" data-astro-cid-j7pv25f6>Asterisk</a> <span data-astro-cid-j7pv25f6>•</span> <a href="https://www.freepbx.org/" target="_blank" rel="noopener noreferrer" data-astro-cid-j7pv25f6>FreePBX</a> <span data-astro-cid-j7pv25f6>•</span> <a href="https://www.issabel.org/" target="_blank" rel="noopener noreferrer" data-astro-cid-j7pv25f6>IssabelPBX</a> <span data-astro-cid-j7pv25f6>•</span> <a href="https://vitalpbx.com/" target="_blank" rel="noopener noreferrer" data-astro-cid-j7pv25f6>VitalPBX</a> </p> <h2 class="title" style="font-size: 1.25rem;" data-i18n="side.title" data-astro-cid-j7pv25f6>Which file goes where?</h2> <p class="hint" data-astro-cid-j7pv25f6> <span data-i18n="side.subtitle" data-astro-cid-j7pv25f6>These files are generated inside</span> <code class="inline" data-astro-cid-j7pv25f6>certs/</code>.
+</p> </div> <div class="panelBody" data-astro-cid-j7pv25f6> <div class="list" data-astro-cid-j7pv25f6> <div class="item" data-astro-cid-j7pv25f6> <div class="name" data-astro-cid-j7pv25f6><code class="inline" data-astro-cid-j7pv25f6>server.crt</code></div> <div class="desc" data-i18n="file.servercrt" data-astro-cid-j7pv25f6>Server certificate (public part).</div> </div> <div class="item" data-astro-cid-j7pv25f6> <div class="name" data-astro-cid-j7pv25f6><code class="inline" data-astro-cid-j7pv25f6>server.key</code></div> <div class="desc" data-i18n="file.serverkey" data-astro-cid-j7pv25f6>Server private key (secret).</div> </div> <div class="item" data-astro-cid-j7pv25f6> <div class="name" data-astro-cid-j7pv25f6><code class="inline" data-astro-cid-j7pv25f6>ca.crt</code></div> <div class="desc" data-i18n="file.cacrt" data-astro-cid-j7pv25f6>CA that signed the server cert (chain).</div> </div> <div class="item" data-astro-cid-j7pv25f6> <div class="name" data-astro-cid-j7pv25f6><code class="inline" data-astro-cid-j7pv25f6>ca.key</code></div> <div class="desc" data-i18n="file.cakey" data-astro-cid-j7pv25f6>CA private key (VERY secret, do not upload).</div> </div> <div class="item" data-astro-cid-j7pv25f6> <div class="name" data-astro-cid-j7pv25f6><code class="inline" data-astro-cid-j7pv25f6>fullchain.crt</code></div> <div class="desc" data-i18n="file.fullchain" data-astro-cid-j7pv25f6>
+Server cert + CA cert in one file (useful for some systems).
+</div> </div> </div> <div class="divider" data-astro-cid-j7pv25f6></div> <div class="miniTitle" data-i18n="validity.title" data-astro-cid-j7pv25f6>Certificate validity</div> <ul class="bullets" data-astro-cid-j7pv25f6> <li data-i18n="validity.ca" data-astro-cid-j7pv25f6>CA certificate (ca.crt): 10 years</li> <li data-i18n="validity.server" data-astro-cid-j7pv25f6>Server certificate (server.crt): 5 years</li> </ul> <p class="hint" style="margin-top: 8px;" data-i18n="validity.note" data-astro-cid-j7pv25f6>
+These validity periods are enforced by the WASM backend during generation.
+</p> <div class="divider" data-astro-cid-j7pv25f6></div> <div class="miniTitle" data-i18n="vital.title" data-astro-cid-j7pv25f6>VitalPBX example</div> <ul class="bullets" data-astro-cid-j7pv25f6> <li data-astro-cid-j7pv25f6><b data-astro-cid-j7pv25f6>Certificate</b>: <code class="inline" data-astro-cid-j7pv25f6>server.crt</code></li> <li data-astro-cid-j7pv25f6><b data-astro-cid-j7pv25f6>Key</b>: <code class="inline" data-astro-cid-j7pv25f6>server.key</code></li> <li data-astro-cid-j7pv25f6><b data-astro-cid-j7pv25f6>Chain</b>: <code class="inline" data-astro-cid-j7pv25f6>ca.crt</code></li> </ul> <p class="hint" style="margin-top: 8px;" data-i18n="mapping.note" data-astro-cid-j7pv25f6>
+Use this mapping in platforms that ask for Certificate / Key / Chain fields (Asterisk, FreePBX,
+                IssabelPBX, VitalPBX).
+</p> <div class="divider" data-astro-cid-j7pv25f6></div> <div class="miniTitle" data-astro-cid-j7pv25f6>Install CA manually</div> <p class="hint" style="margin-top: 6px;" data-astro-cid-j7pv25f6>
+Open a step-by-step modal to install <code class="inline" data-astro-cid-j7pv25f6>ca.crt</code> on each OS.
+</p> <button id="openInstallModal" class="openModalBtn" type="button" data-astro-cid-j7pv25f6>Open install guide</button> </div> </aside> </div> </div> </div> </div> <dialog id="installModal" class="installModal" data-astro-cid-j7pv25f6> <div class="modalHeader" data-astro-cid-j7pv25f6> <h3 data-astro-cid-j7pv25f6>Install <code class="inline" data-astro-cid-j7pv25f6>ca.crt</code></h3> <button id="closeInstallModal" class="closeBtn" type="button" aria-label="Close" data-astro-cid-j7pv25f6>x</button> </div> <div class="tabs" role="tablist" aria-label="Install options" data-astro-cid-j7pv25f6> <button class="tabBtn isActive" type="button" role="tab" data-tab-target="winPanel" data-astro-cid-j7pv25f6>Windows</button> <button class="tabBtn" type="button" role="tab" data-tab-target="linuxPanel" data-astro-cid-j7pv25f6>Linux</button> <button class="tabBtn" type="button" role="tab" data-tab-target="macPanel" data-astro-cid-j7pv25f6>macOS</button> <button class="tabBtn" type="button" role="tab" data-tab-target="scriptPanel" data-astro-cid-j7pv25f6>Script</button> </div> <section id="winPanel" class="tabPanel isActive" role="tabpanel" data-astro-cid-j7pv25f6> <h4 data-astro-cid-j7pv25f6>Install from PowerShell (without script)</h4> <ol data-astro-cid-j7pv25f6> <li data-astro-cid-j7pv25f6>Open PowerShell as Administrator.</li> <li data-astro-cid-j7pv25f6>Go to the extracted cert folder:</li> </ol> <pre data-astro-cid-j7pv25f6><code data-astro-cid-j7pv25f6>cd "C:\Users\$env:USERNAME\Downloads\certs"</code></pre> <ol start="3" data-astro-cid-j7pv25f6> <li data-astro-cid-j7pv25f6>Install <code class="inline" data-astro-cid-j7pv25f6>ca.crt</code>:</li> </ol> <pre data-astro-cid-j7pv25f6><code data-astro-cid-j7pv25f6>Import-Certificate -FilePath ".\ca.crt" -CertStoreLocation "Cert:\LocalMachine\Root"</code></pre> <ol start="4" data-astro-cid-j7pv25f6> <li data-astro-cid-j7pv25f6>Validate installation:</li> </ol> <pre data-astro-cid-j7pv25f6><code data-astro-cid-j7pv25f6>$thumb = (Get-PfxCertificate ".\ca.crt").Thumbprint
+Get-ChildItem "Cert:\LocalMachine\Root" | Where-Object &#123; $_.Thumbprint -eq $thumb &#125;</code></pre> </section> <section id="linuxPanel" class="tabPanel" role="tabpanel" hidden data-astro-cid-j7pv25f6> <h4 data-astro-cid-j7pv25f6>Linux (manual commands)</h4> <p data-astro-cid-j7pv25f6>Debian/Ubuntu/Alpine style:</p> <pre data-astro-cid-j7pv25f6><code data-astro-cid-j7pv25f6>cd ~/Downloads/certs
+sudo cp ca.crt /usr/local/share/ca-certificates/ca.crt
+sudo update-ca-certificates</code></pre> <p data-astro-cid-j7pv25f6>RHEL/CentOS/Fedora style:</p> <pre data-astro-cid-j7pv25f6><code data-astro-cid-j7pv25f6>cd ~/Downloads/certs
+sudo cp ca.crt /etc/pki/ca-trust/source/anchors/ca.crt
+sudo update-ca-trust extract</code></pre> <p data-astro-cid-j7pv25f6>Quick validation:</p> <pre data-astro-cid-j7pv25f6><code data-astro-cid-j7pv25f6>openssl x509 -in ca.crt -noout -fingerprint -sha256</code></pre> </section> <section id="macPanel" class="tabPanel" role="tabpanel" hidden data-astro-cid-j7pv25f6> <h4 data-astro-cid-j7pv25f6>macOS (manual commands)</h4> <ol data-astro-cid-j7pv25f6> <li data-astro-cid-j7pv25f6>Open Terminal.</li> <li data-astro-cid-j7pv25f6>Go to the extracted cert folder:</li> </ol> <pre data-astro-cid-j7pv25f6><code data-astro-cid-j7pv25f6>cd ~/Downloads/certs</code></pre> <ol start="3" data-astro-cid-j7pv25f6> <li data-astro-cid-j7pv25f6>Install certificate into System keychain:</li> </ol> <pre data-astro-cid-j7pv25f6><code data-astro-cid-j7pv25f6>sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ./ca.crt</code></pre> <ol start="4" data-astro-cid-j7pv25f6> <li data-astro-cid-j7pv25f6>Validate certificate is present:</li> </ol> <pre data-astro-cid-j7pv25f6><code data-astro-cid-j7pv25f6>sudo security find-certificate -a -Z /Library/Keychains/System.keychain | grep -i "$(openssl x509 -in ./ca.crt -noout -fingerprint -sha256 | awk -F= '&#123;print $2&#125;' | tr -d ':')"</code></pre> </section> <section id="scriptPanel" class="tabPanel" role="tabpanel" hidden data-astro-cid-j7pv25f6> <h4 data-astro-cid-j7pv25f6>Use helper script</h4> <p data-astro-cid-j7pv25f6>This project includes <code class="inline" data-astro-cid-j7pv25f6>install_ca_cert.sh</code> with cross-platform logic.</p> <pre data-astro-cid-j7pv25f6><code data-astro-cid-j7pv25f6>cd ~/Downloads/certs
+chmod +x ./install_ca_cert.sh
+./install_ca_cert.sh</code></pre> <a class="downloadBtn" href="/install_ca_cert.sh" download="install_ca_cert.sh" data-astro-cid-j7pv25f6>Download script</a> </section> </dialog>  <footer style="padding: 20px 18px 34px; text-align: center; color: rgba(255,255,255,0.62);"> <small>Copyright © 2026 CNSoluciones - fpereira@cnsoluciones.com</small> </footer> <script src="/scripts/i18n.js"></script> <script>
+      // Register SW once the page is loaded.
+      // The SW will intercept only /api/* (see public/sw.js).
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          const host = window.location.hostname;
+          console.log("[ui] location", window.location.href);
+          if (host !== "localhost" && host !== "127.0.0.1") {
+            console.warn(
+              "[ui] Non-localhost host detected. Use http://localhost:PORT or http://127.0.0.1:PORT so Service Worker/WASM routing works as expected."
+            );
+          }
+
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then((registration) => {
+              console.log("[ui] sw registered", registration.scope);
+            })
+            .catch((err) => {
+              console.error("[ui] sw registration failed", err);
+            });
+        });
+      }
+    </script> </body> </html> <script>
+  // Modal + tabs controller (client side only).
+  const openInstallModalBtn = document.getElementById("openInstallModal");
+  const closeInstallModalBtn = document.getElementById("closeInstallModal");
+  const installModal = document.getElementById("installModal");
+  const tabButtons = Array.from(document.querySelectorAll(".tabBtn"));
+  const tabPanels = Array.from(document.querySelectorAll(".tabPanel"));
+
+  function activateTab(targetId) {
+    tabButtons.forEach((btn) => {
+      const isActive = btn.dataset.tabTarget === targetId;
+      btn.classList.toggle("isActive", isActive);
+      btn.setAttribute("aria-selected", String(isActive));
+    });
+
+    tabPanels.forEach((panel) => {
+      const isActive = panel.id === targetId;
+      panel.classList.toggle("isActive", isActive);
+      panel.hidden = !isActive;
+    });
+  }
+
+  if (openInstallModalBtn && installModal) {
+    openInstallModalBtn.addEventListener("click", () => installModal.showModal());
+  }
+  if (closeInstallModalBtn && installModal) {
+    closeInstallModalBtn.addEventListener("click", () => installModal.close());
+  }
+  if (installModal) {
+    installModal.addEventListener("click", (event) => {
+      const rect = installModal.getBoundingClientRect();
+      const inside =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom;
+      if (!inside) installModal.close();
+    });
+  }
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      activateTab(btn.dataset.tabTarget);
+    });
+  });
+</script> 

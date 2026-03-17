@@ -1,0 +1,50 @@
+---
+const { title = "WASM CertGen" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <title>{title}</title>
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <slot />
+
+    <footer style="padding: 20px 18px 34px; text-align: center; color: rgba(255,255,255,0.62);">
+      <small>Copyright © 2026 CNSoluciones - fpereira@cnsoluciones.com</small>
+    </footer>
+
+    <script is:inline src="/scripts/i18n.js"></script>
+
+    <script is:inline>
+      // Register SW once the page is loaded.
+      // The SW will intercept only /api/* (see public/sw.js).
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          const host = window.location.hostname;
+          console.log("[ui] location", window.location.href);
+          if (host !== "localhost" && host !== "127.0.0.1") {
+            console.warn(
+              "[ui] Non-localhost host detected. Use http://localhost:PORT or http://127.0.0.1:PORT so Service Worker/WASM routing works as expected."
+            );
+          }
+
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then((registration) => {
+              console.log("[ui] sw registered", registration.scope);
+            })
+            .catch((err) => {
+              console.error("[ui] sw registration failed", err);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
+

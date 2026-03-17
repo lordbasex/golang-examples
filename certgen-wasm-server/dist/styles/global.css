@@ -1,0 +1,102 @@
+/* Global styles for the Astro UI (static site output). */
+:root {
+  --bg: #0b1020;
+  --panel: rgba(255, 255, 255, 0.06);
+  --panel-2: rgba(255, 255, 255, 0.09);
+  --text: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.66);
+  --border: rgba(255, 255, 255, 0.14);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.42);
+
+  --accent: #80ffea;
+  --accent-2: #f5ff85;
+  --danger: #ff6b6b;
+  --ok: #7dff9a;
+
+  --radius: 16px;
+  --radius-sm: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: radial-gradient(1200px 900px at 15% 10%, rgba(128, 255, 234, 0.22), transparent 60%),
+    radial-gradient(1100px 900px at 85% 15%, rgba(245, 255, 133, 0.14), transparent 55%),
+    radial-gradient(900px 800px at 40% 90%, rgba(127, 140, 255, 0.18), transparent 60%),
+    var(--bg);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans,
+    Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  line-height: 1.45;
+}
+
+a {
+  color: inherit;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 18px 70px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.9fr;
+  gap: 18px;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel {
+  background: linear-gradient(180deg, var(--panel), rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.panelHeader {
+  padding: 18px 18px 0;
+}
+
+.panelBody {
+  padding: 18px;
+}
+
+.kicker {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.title {
+  margin: 8px 0 8px;
+  font-size: 1.8rem;
+  letter-spacing: -0.02em;
+}
+
+.hint {
+  color: var(--muted);
+  margin: 0;
+}
+
+code.inline {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 0.92em;
+}
+

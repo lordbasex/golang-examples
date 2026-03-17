@@ -1,0 +1,92 @@
+---
+const {
+  id,
+  label,
+  labelKey = "",
+  placeholder = "",
+  placeholderKey = "",
+  value = "",
+  required = false,
+  help = "",
+  helpKey = "",
+  error = "",
+  type = "text",
+  inputmode = undefined,
+  autocapitalize = "none",
+  autocomplete = "off",
+} = Astro.props;
+// Atom: reusable input field with label + help + error.
+---
+
+<div class="field">
+  <label class="label" for={id} data-i18n={labelKey || undefined}>
+    {label}{required ? <span class="req">*</span> : null}
+  </label>
+  <input
+    class:list={["input", error ? "isError" : null]}
+    id={id}
+    name={id}
+    type={type}
+    placeholder={placeholder}
+    data-i18n-placeholder={placeholderKey || undefined}
+    value={value}
+    required={required}
+    inputmode={inputmode}
+    autocapitalize={autocapitalize}
+    autocomplete={autocomplete}
+  />
+  {help ? <p class="help" data-i18n={helpKey || undefined}>{help}</p> : null}
+  {error ? <p class="error">{error}</p> : null}
+</div>
+
+<style>
+  .field {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+  }
+  .label {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    min-height: 24px;
+  }
+  .req {
+    color: rgba(255, 255, 255, 0.75);
+    margin-left: 4px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .input {
+    width: 100%;
+    padding: 12px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.92);
+    outline: none;
+    transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+  }
+  .input:focus {
+    border-color: rgba(128, 255, 234, 0.55);
+    box-shadow: 0 0 0 4px rgba(128, 255, 234, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .isError {
+    border-color: rgba(255, 107, 107, 0.6);
+    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.12);
+  }
+  .help {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.92rem;
+    min-height: 2.6em;
+  }
+  .error {
+    margin: 0;
+    color: rgba(255, 107, 107, 0.92);
+    font-size: 0.92rem;
+  }
+</style>
+

@@ -1,0 +1,294 @@
+---
+import InputField from "../atoms/InputField.astro";
+import Button from "../atoms/Button.astro";
+---
+
+<form id="certForm" class="form">
+  <div class="row">
+    <InputField
+      id="domain"
+      label="Domain"
+      labelKey="field.domain"
+      placeholder="pbx.local"
+      required={true}
+      help="DNS name used by the browser (must match exactly)."
+      helpKey="field.domain.help"
+    />
+    <InputField
+      id="ip"
+      label="IP"
+      labelKey="field.ip"
+      placeholder="192.168.1.10"
+      required={true}
+      help="Server IP address (added to SAN)."
+      helpKey="field.ip.help"
+      inputmode="decimal"
+    />
+  </div>
+
+  <InputField
+    id="org"
+    label="Org"
+    labelKey="field.org"
+    placeholder="My Company"
+    required={true}
+    help="Organization name written inside the certificate."
+    helpKey="field.org.help"
+    autocapitalize="words"
+  />
+
+  <div class="actions">
+    <Button type="submit"><span data-i18n="button.generate">Generate & Download ZIP</span></Button>
+  </div>
+
+  <div id="formAlert" class="alert" hidden></div>
+</form>
+
+<script is:inline>
+  // This script runs in the browser (Astro outputs static HTML).
+  // We validate on the client for fast UX, then validate again in WASM (authoritative).
+  const form = document.getElementById("certForm");
+  const alertBox = document.getElementById("formAlert");
+
+  const fields = {
+    domain: document.getElementById("domain"),
+    ip: document.getElementById("ip"),
+    org: document.getElementById("org"),
+  };
+
+  function t(key, vars) {
+    if (window.I18N && typeof window.I18N.t === "function") {
+      return window.I18N.t(key, vars);
+    }
+    return key;
+  }
+
+  function setAlert(kind, msg) {
+    alertBox.hidden = !msg;
+    alertBox.dataset.kind = kind || "info";
+    alertBox.textContent = msg || "";
+    if (msg) console.log("[ui] alert", { kind: kind || "info", msg });
+  }
+
+  function setFieldError(inputEl, msg) {
+    // InputField renders the error via CSS class; we keep it simple in JS:
+    // - red border via class
+    // - show message in alert (and field's native validity text)
+    if (msg) {
+      inputEl.classList.add("isError");
+      inputEl.setCustomValidity(msg);
+    } else {
+      inputEl.classList.remove("isError");
+      inputEl.setCustomValidity("");
+    }
+  }
+
+  function isValidDomain(value) {
+    // Simple beginner-friendly check (UI only). Backend is authoritative.
+    // Accepts "pbx.local" and typical hostnames.
+    if (!value) return false;
+    if (value.includes(" ")) return false;
+    if (!value.includes(".")) return false;
+    if (value.startsWith(".") || value.endsWith(".")) return false;
+    return true;
+  }
+
+  function isValidIP(value) {
+    // IPv4-only UI check (backend accepts full net.ParseIP).
+    const m = value.match(/^(\d{1,3})(\.\d{1,3}){3}$/);
+    if (!m) return false;
+    return value.split(".").every((x) => {
+      const n = Number(x);
+      return Number.isInteger(n) && n >= 0 && n <= 255;
+    });
+  }
+
+  function validateClient() {
+    const domain = fields.domain.value.trim();
+    const ip = fields.ip.value.trim();
+    const org = fields.org.value.trim();
+
+    let ok = true;
+    setAlert("", "");
+
+    if (!isValidDomain(domain)) {
+      setFieldError(fields.domain, t("err.invalidDomain"));
+      ok = false;
+    } else {
+      setFieldError(fields.domain, "");
+    }
+
+    if (!isValidIP(ip)) {
+      setFieldError(fields.ip, t("err.invalidIP"));
+      ok = false;
+    } else {
+      setFieldError(fields.ip, "");
+    }
+
+    if (!org) {
+      setFieldError(fields.org, t("err.orgRequired"));
+      ok = false;
+    } else if (org.length > 128) {
+      setFieldError(fields.org, t("err.orgTooLong"));
+      ok = false;
+    } else {
+      setFieldError(fields.org, "");
+    }
+
+    console.log("[ui] validateClient", { ok, domain, ip, org });
+    return ok;
+  }
+
+  async function downloadZip(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function pad2(value) {
+    return String(value).padStart(2, "0");
+  }
+
+  function sanitizeFilenamePart(value) {
+    // Keep dots and dashes for readability, replace unsafe filename chars.
+    return value.replace(/[\\/:*?"<>|]/g, "_");
+  }
+
+  function buildZipFilename(domain) {
+    // Format: domain-YYYYMMDD-HHMMSS.zip
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = pad2(now.getMonth() + 1);
+    const dd = pad2(now.getDate());
+    const hh = pad2(now.getHours());
+    const mi = pad2(now.getMinutes());
+    const ss = pad2(now.getSeconds());
+    const safeDomain = sanitizeFilenamePart(domain || "certs");
+    return `${safeDomain}-${yyyy}${mm}${dd}-${hh}${mi}${ss}.zip`;
+  }
+
+  async function ensureWasmRouteReady() {
+    // Service Worker is mandatory in this architecture because /api/*
+    // is handled by WASM inside the SW, not by the static Python server.
+    if (!("serviceWorker" in navigator)) {
+      throw new Error("service_worker_not_supported");
+    }
+
+    const registration = await navigator.serviceWorker.ready;
+    console.log("[ui] sw ready", registration.scope);
+
+    // Wait a short time for control on first load.
+    if (!navigator.serviceWorker.controller) {
+      console.log("[ui] waiting for service worker controller...");
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    if (!navigator.serviceWorker.controller) {
+      throw new Error("service_worker_not_controlling_page");
+    }
+
+    // Optional debug checks to make missing artifacts obvious.
+    const swRes = await fetch("/sw.js", { method: "GET", cache: "no-store" });
+    const wasmRes = await fetch("/server.wasm", { method: "HEAD", cache: "no-store" });
+    console.log("[ui] artifact checks", { sw: swRes.status, wasm: wasmRes.status });
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    console.log("[ui] submit");
+    if (!validateClient()) {
+      setAlert("error", t("alert.checkFields"));
+      return;
+    }
+
+    setAlert("info", t("alert.generating"));
+
+    const payload = {
+      domain: fields.domain.value.trim(),
+      ip: fields.ip.value.trim(),
+      org: fields.org.value.trim(),
+    };
+
+    console.log("[ui] request payload", payload);
+    try {
+      await ensureWasmRouteReady();
+
+      const res = await fetch("/api/certgen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const contentType = res.headers.get("content-type") || "";
+      console.log("[ui] response", { ok: res.ok, status: res.status, contentType });
+      if (!res.ok) {
+        if (contentType.includes("application/json")) {
+          const data = await res.json();
+          console.log("[ui] error json", data);
+          if (data && data.message === "validation_failed" && data.errors) {
+            setAlert("error", t("alert.validationFailed"));
+            for (const k of ["domain", "ip", "org"]) {
+              if (data.errors[k]) setFieldError(fields[k], data.errors[k]);
+            }
+          } else {
+            setAlert("error", "Error: " + (data?.message || "unknown_error"));
+          }
+        } else {
+          setAlert("error", t("alert.zipError"));
+        }
+        return;
+      }
+
+      const blob = await res.blob();
+      console.log("[ui] zip received", { bytes: blob.size, type: blob.type || "unknown" });
+      const filename = buildZipFilename(payload.domain);
+      await downloadZip(blob, filename);
+      setAlert("ok", t("alert.downloaded", { filename }));
+    } catch (err) {
+      console.log("[ui] network error", err);
+      setAlert("error", t("alert.swNotReady"));
+    }
+  });
+</script>
+
+<style>
+  .form {
+    display: grid;
+    gap: 14px;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 620px) {
+    .row {
+      grid-template-columns: 1fr;
+    }
+  }
+  .actions {
+    padding-top: 6px;
+  }
+  .alert {
+    padding: 12px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.88);
+  }
+  .alert[data-kind="error"] {
+    border-color: rgba(255, 107, 107, 0.55);
+    background: rgba(255, 107, 107, 0.08);
+  }
+  .alert[data-kind="ok"] {
+    border-color: rgba(125, 255, 154, 0.45);
+    background: rgba(125, 255, 154, 0.08);
+  }
+</style>
+

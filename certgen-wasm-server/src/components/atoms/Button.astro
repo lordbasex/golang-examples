@@ -1,0 +1,45 @@
+---
+const {
+  type = "button",
+  variant = "primary", // primary | ghost
+  disabled = false,
+} = Astro.props;
+// Atom: simple button with two variants.
+---
+
+<button class:list={["btn", variant === "ghost" ? "ghost" : "primary"]} type={type} disabled={disabled}>
+  <slot />
+</button>
+
+<style>
+  .btn {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    transition: transform 120ms ease, filter 120ms ease, background 120ms ease, border-color 120ms ease;
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .primary {
+    background: linear-gradient(90deg, rgba(128, 255, 234, 0.85), rgba(245, 255, 133, 0.75));
+    color: rgba(10, 14, 28, 0.92);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+  .ghost {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.9);
+  }
+  .btn:hover:enabled {
+    filter: brightness(1.05);
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+</style>
+
