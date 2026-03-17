@@ -4,8 +4,6 @@
 
 Generate internal TLS certificates directly in the browser using **Astro + Go WASM + Service Worker**.
 
-> The prototype was removed. This repository now contains only the WASM implementation.
-
 ## What this project does
 
 The web form asks for:
